@@ -8,6 +8,9 @@ import { getAllOrdersOfShop } from "../../redux/actions/order";
 import { getAllProductsShop } from "../../redux/actions/product";
 import { Button } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
+import AdminTotalSales from "../Admin/AdminTotalSales";
+import AdminChart from "../Admin/AdminChart";
+import SellerTotalSales from "./SellerTotalSales";
 
 const DashboardHero = () => {
   const dispatch = useDispatch();
@@ -139,6 +142,14 @@ const DashboardHero = () => {
             <h5 className="pt-4 pl-2 text-[#077f9c]">View Products</h5>
           </Link>
         </div>
+      </div>
+      <div className="w-full flex flex-col 800px:flex-row gap-4">
+            <div className="w-full 800px:w-[50%] bg-white shadow rounded px-4 py-4">
+              <SellerTotalSales />
+            </div>
+            <div className="w-full 800px:w-[50%] bg-white shadow rounded px-4 py-4">
+              <AdminChart />
+            </div>
       </div>
       <br />
       <h3 className="text-[22px] font-Poppins pb-2">Latest Orders</h3>

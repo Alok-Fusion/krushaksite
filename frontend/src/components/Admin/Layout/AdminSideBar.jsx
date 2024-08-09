@@ -1,6 +1,6 @@
 import React from "react";
 import { FiShoppingBag } from "react-icons/fi";
-import {GrWorkshop} from "react-icons/gr";
+import { GrWorkshop } from "react-icons/gr";
 import { RxDashboard } from "react-icons/rx";
 import { CiMap, CiMoneyBill, CiSettings } from "react-icons/ci";
 import { Link } from "react-router-dom";
@@ -11,8 +11,17 @@ import { AiOutlineSetting } from "react-icons/ai";
 
 const AdminSideBar = ({ active }) => {
   return (
-    <div className="w-full h-[90vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
-      {/* single item */}
+    <div
+      className="h-[100vh] bg-white shadow-sm overflow-y-scroll"
+      style={{
+        position: "fixed",
+        top: "auto",
+        left: 0,
+        width: "250px", // Adjust the width to your needs
+        zIndex: 1000,
+      }}
+    >
+      {/* Single item */}
       <div className="w-full flex items-center p-4">
         <Link to="/admin/dashboard" className="w-full flex items-center">
           <RxDashboard
@@ -110,10 +119,7 @@ const AdminSideBar = ({ active }) => {
       </div>
 
       <div className="w-full flex items-center p-4">
-        <Link
-          to="/admin-withdraw-request"
-          className="w-full flex items-center"
-        >
+        <Link to="/admin-withdraw-request" className="w-full flex items-center">
           <CiMoneyBill
             size={30}
             color={`${active === 8 ? "crimson" : "#555"}`}
@@ -129,10 +135,7 @@ const AdminSideBar = ({ active }) => {
       </div>
 
       <div className="w-full flex items-center p-4">
-        <Link
-          to="/profile"
-          className="w-full flex items-center"
-        >
+        <Link to="/profile" className="w-full flex items-center">
           <AiOutlineSetting
             size={30}
             color={`${active === 9 ? "crimson" : "#555"}`}
@@ -146,7 +149,6 @@ const AdminSideBar = ({ active }) => {
           </h5>
         </Link>
       </div>
-
     </div>
   );
 };

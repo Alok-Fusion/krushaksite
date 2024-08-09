@@ -1,5 +1,5 @@
 import { Button } from '@material-ui/core';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiOutlineDelete, AiOutlineEye } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
@@ -7,15 +7,20 @@ import Loader from '../Layout/Loader';
 import { DataGrid } from '@material-ui/data-grid';
 import { getAllLandsShop } from '../../redux/actions/lands';
 import { deleteLands } from '../../redux/actions/lands';
+import axios from 'axios';
+import { server } from '../../server';
 const AllLand = () => {
-  const { lands, isLoading } = useSelector((state) => state.lands);
-  const {seller} = useSelector((state) => state.seller);
+  const { isLoading } = useSelector();
+  const {data, setData} = useState([]);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllLandsShop(seller._id));
-  },[dispatch]);
+    axios.get(`${server}lands/admin-all-lands`, { withCredentials: true }).then((res) => {
+      setData(res.data.lands);
+    });
+    
+  })
 
   const handleDelete = (id) => {
     dispatch(deleteLands(id));
@@ -88,7 +93,7 @@ const AllLand = () => {
 
   const row = [];
 
-  lands && lands.forEach((item) => {
+  data && data.forEach((item) => {
     row.push({
       id: item._id,
       name: item.name,
