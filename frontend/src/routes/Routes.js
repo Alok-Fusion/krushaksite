@@ -29,6 +29,7 @@ import LandsPage from "../pages/LandsPage.jsx";
 import LandsDetailsPage from "../pages/LandsDetailsPage.jsx";
 import AboutUsPage from "../pages/AboutUsPge.jsx";
 import DiseaseDetectionPage from "../pages/DiseaseDetectionPage.jsx";
+import PriceTrendsPage from "../pages/PriceTrendsPage.jsx";
 export { 
     LandsPage,
     LoginPage,
@@ -61,4 +62,5 @@ export {
     LandsDetailsPage,
     AboutUsPage,
     DiseaseDetectionPage,
+    PriceTrendsPage,
 };

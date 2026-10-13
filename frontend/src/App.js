@@ -33,6 +33,7 @@ import {
   LandsDetailsPage,
   AboutUsPage,
   DiseaseDetectionPage,
+  PriceTrendsPage,
 } from "./routes/Routes.js";
 import {
   ShopDashboardPage,
@@ -137,6 +138,8 @@ const App = () => {
         <Route path="/lands" element={<LandsPage />} />
         <Route path="/disease-detection" element={<DiseaseDetectionPage />} />
         <Route path="/crop-doctor" element={<DiseaseDetectionPage />} />
+        <Route path="/price-trends" element={<PriceTrendsPage />} />
+        <Route path="/mandi-forecast" element={<PriceTrendsPage />} />
         <Route path="/lands/:id" element={<LandsDetailsPage />} />
         <Route path="/about" element={<AboutUsPage />}/>
         <Route

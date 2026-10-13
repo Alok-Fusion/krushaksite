@@ -25,6 +25,10 @@ export const navItems = [
       url: "/disease-detection",
     },
     {
+      title: "Price Trends (AI)",
+      url: "/price-trends",
+    },
+    {
       title: "FAQ",
       url: "/faq",
     },
