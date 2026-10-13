@@ -32,6 +32,46 @@ const normalizeResultSchema = z.object({
   keyword: z.string().min(1),
 });
 
+// Validation schema for forecast query
+const forecastQuerySchema = z.object({
+  crop: z
+    .string({ message: "Crop is required" })
+    .trim()
+    .min(1, "Crop parameter cannot be empty"),
+  market: z
+    .string({ message: "Market is required" })
+    .trim()
+    .min(1, "Market parameter cannot be empty"),
+  days: z.coerce
+    .number({ message: "Days must be a number" })
+    .int()
+    .refine((val) => val === 7 || val === 30, {
+      message: "Days parameter must be either 7 or 30",
+    })
+    .default(7),
+});
+
+// In-memory forecast cache (TTL = 5 minutes)
+const forecastCache = new Map();
+const CACHE_TTL_MS = 5 * 60 * 1000;
+
+function getCachedForecast(key) {
+  const cached = forecastCache.get(key);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+    return cached.data;
+  }
+  forecastCache.delete(key);
+  return null;
+}
+
+function setCachedForecast(key, data) {
+  forecastCache.set(key, { data, timestamp: Date.now() });
+  if (forecastCache.size > 200) {
+    const oldest = forecastCache.keys().next().value;
+    forecastCache.delete(oldest);
+  }
+}
+
 // Helper to extract clean base64 data and mime type
 function parseImageData(dataUrlOrBase64) {
   let mimeType = "image/jpeg";
@@ -336,5 +376,112 @@ Return JSON object: {"keyword": "<english crop or product name>"}`;
     }
   })
 );
+// GET /api/v2/ai/forecast & /api/ai/forecast - Proxy to ML service with caching & rate limiting
+router.get(
+  "/forecast",
+  aiLimiter,
+  catchAsyncErrors(async (req, res, next) => {
+    const parseResult = forecastQuerySchema.safeParse(req.query);
+    if (!parseResult.success) {
+      return next(
+        new ErrorHandler(
+          parseResult.error.issues[0]?.message || "Invalid forecast query parameters",
+          400
+        )
+      );
+    }
+
+    const { crop, market, days } = parseResult.data;
+    const cacheKey = `${crop.toLowerCase()}_${market.toLowerCase()}_${days}`;
+    const cachedData = getCachedForecast(cacheKey);
+
+    if (cachedData) {
+      return res.status(200).json({
+        success: true,
+        cached: true,
+        ...cachedData,
+      });
+    }
+
+    const mlServiceUrl = process.env.ML_SERVICE_URL || "http://localhost:8001";
+    const targetUrl = `${mlServiceUrl}/forecast?crop=${encodeURIComponent(crop)}&market=${encodeURIComponent(market)}&days=${days}`;
+
+    try {
+      const response = await fetch(targetUrl, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        const errJson = await response.json().catch(() => ({}));
+        return next(
+          new ErrorHandler(
+            errJson.detail || `ML forecasting service error: ${response.statusText}`,
+            response.status
+          )
+        );
+      }
+
+      const data = await response.json();
+      setCachedForecast(cacheKey, data);
+
+      return res.status(200).json({
+        success: true,
+        cached: false,
+        ...data,
+      });
+    } catch (err) {
+      return next(
+        new ErrorHandler(
+          `Unable to reach Mandi Forecaster ML service: ${err.message}`,
+          503
+        )
+      );
+    }
+  })
+);
+
+// GET /crops - List supported mandi crops
+router.get(
+  "/crops",
+  catchAsyncErrors(async (req, res) => {
+    const mlServiceUrl = process.env.ML_SERVICE_URL || "http://localhost:8001";
+    try {
+      const response = await fetch(`${mlServiceUrl}/crops`);
+      if (response.ok) {
+        const data = await response.json();
+        return res.status(200).json({ success: true, ...data });
+      }
+    } catch (e) {
+      // Fallback default crop list
+    }
+    return res.status(200).json({
+      success: true,
+      crops: ["onion", "tomato", "potato", "wheat", "soybean", "cotton", "maize", "tur"],
+    });
+  })
+);
+
+// GET /markets - List supported Maharashtra APMC mandis
+router.get(
+  "/markets",
+  catchAsyncErrors(async (req, res) => {
+    const mlServiceUrl = process.env.ML_SERVICE_URL || "http://localhost:8001";
+    try {
+      const response = await fetch(`${mlServiceUrl}/markets`);
+      if (response.ok) {
+        const data = await response.json();
+        return res.status(200).json({ success: true, ...data });
+      }
+    } catch (e) {
+      // Fallback default markets list
+    }
+    return res.status(200).json({
+      success: true,
+      markets: ["Lasalgaon", "Pune", "Nashik", "Nagpur", "Kolhapur", "Latur"],
+    });
+  })
+);
 
 module.exports = router;
+
