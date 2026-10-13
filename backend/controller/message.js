@@ -3,27 +3,29 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const express = require("express");
 const cloudinary = require("cloudinary");
+const { isAuthenticatedOrSeller } = require("../middleware/auth");
 const router = express.Router();
 
 // create new message
 router.post(
   "/create-new-message",
+  isAuthenticatedOrSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
       const messageData = req.body;
 
-      if (req.body.images) {
+      if (req.body.images && req.body.images.length > 50) {
         const myCloud = await cloudinary.v2.uploader.upload(req.body.images, {
           folder: "messages",
         });
         messageData.images = {
           public_id: myCloud.public_id,
-          url: myCloud.url,
+          url: myCloud.secure_url,
         };
       }
 
       messageData.conversationId = req.body.conversationId;
-      messageData.sender = req.body.sender;
+      messageData.sender = req.user ? req.user._id.toString() : req.seller ? req.seller._id.toString() : req.body.sender;
       messageData.text = req.body.text;
 
       const message = new Messages({
@@ -40,7 +42,7 @@ router.post(
         message,
       });
     } catch (error) {
-      return next(new ErrorHandler(error.message), 500);
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );
@@ -48,18 +50,19 @@ router.post(
 // get all messages with conversation id
 router.get(
   "/get-all-messages/:id",
+  isAuthenticatedOrSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
       const messages = await Messages.find({
         conversationId: req.params.id,
       });
 
-      res.status(201).json({
+      res.status(200).json({
         success: true,
         messages,
       });
     } catch (error) {
-      return next(new ErrorHandler(error.message), 500);
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );

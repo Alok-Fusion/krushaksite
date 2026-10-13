@@ -14,32 +14,40 @@ router.post(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const { amount } = req.body;
+      const withdrawAmount = Number(amount);
+
+      if (!withdrawAmount || withdrawAmount <= 0) {
+        return next(new ErrorHandler("Please enter a valid withdrawal amount", 400));
+      }
+
+      const shop = await Shop.findById(req.seller._id);
+      if (!shop) {
+        return next(new ErrorHandler("Seller account not found", 404));
+      }
+
+      if ((shop.availableBalance || 0) < withdrawAmount) {
+        return next(new ErrorHandler("Insufficient available balance for withdrawal", 400));
+      }
 
       const data = {
         seller: req.seller,
-        amount,
+        amount: withdrawAmount,
       };
+
+      const withdraw = await Withdraw.create(data);
+
+      shop.availableBalance = shop.availableBalance - withdrawAmount;
+      await shop.save();
 
       try {
         await sendMail({
           email: req.seller.email,
-          subject: "Withdraw Request",
-          message: `Hello ${req.seller.name}, Your withdraw request of ${amount}$ is processing. It will take 3days to 7days to processing! `,
+          subject: "Krushak - Withdrawal Request Received",
+          message: `Hello ${req.seller.name},\n\nYour withdrawal request of ₹${withdrawAmount} is being processed. Typical processing time is 3 to 7 business days.`,
         });
-        res.status(201).json({
-          success: true,
-        });
-      } catch (error) {
-        return next(new ErrorHandler(error.message, 500));
+      } catch (mailError) {
+        console.error("Failed to send withdrawal email notification:", mailError.message);
       }
-
-      const withdraw = await Withdraw.create(data);
-
-      const shop = await Shop.findById(req.seller._id);
-
-      shop.availableBalance = shop.availableBalance - amount;
-
-      await shop.save();
 
       res.status(201).json({
         success: true,
@@ -51,8 +59,7 @@ router.post(
   })
 );
 
-// get all withdraws --- admnin
-
+// get all withdraws --- admin
 router.get(
   "/get-all-withdraw-request",
   isAuthenticated,
@@ -61,7 +68,7 @@ router.get(
     try {
       const withdraws = await Withdraw.find().sort({ createdAt: -1 });
 
-      res.status(201).json({
+      res.status(200).json({
         success: true,
         withdraws,
       });
@@ -89,29 +96,34 @@ router.put(
         { new: true }
       );
 
-      const seller = await Shop.findById(sellerId);
-
-      const transection = {
-        _id: withdraw._id,
-        amount: withdraw.amount,
-        updatedAt: withdraw.updatedAt,
-        status: withdraw.status,
-      };
-
-      seller.transections = [...seller.transections, transection];
-
-      await seller.save();
-
-      try {
-        await sendMail({
-          email: seller.email,
-          subject: "Payment confirmation",
-          message: `Hello ${seller.name}, Your withdraw request of ${withdraw.amount}$ is on the way. Delivery time depends on your bank's rules it usually takes 3days to 7days.`,
-        });
-      } catch (error) {
-        return next(new ErrorHandler(error.message, 500));
+      if (!withdraw) {
+        return next(new ErrorHandler("Withdraw request not found", 404));
       }
-      res.status(201).json({
+
+      const seller = await Shop.findById(sellerId || withdraw.seller?._id);
+      if (seller) {
+        const transaction = {
+          _id: withdraw._id,
+          amount: withdraw.amount,
+          updatedAt: withdraw.updatedAt,
+          status: withdraw.status,
+        };
+
+        seller.transections = [...(seller.transections || []), transaction];
+        await seller.save();
+
+        try {
+          await sendMail({
+            email: seller.email,
+            subject: "Krushak - Withdrawal Payout Confirmation",
+            message: `Hello ${seller.name},\n\nYour withdrawal of ₹${withdraw.amount} has been successfully disbursed to your payout method.`,
+          });
+        } catch (mailErr) {
+          console.error("Disbursement mail error:", mailErr.message);
+        }
+      }
+
+      res.status(200).json({
         success: true,
         withdraw,
       });
