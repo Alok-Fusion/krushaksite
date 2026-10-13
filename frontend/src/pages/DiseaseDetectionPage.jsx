@@ -23,7 +23,6 @@ const DiseaseDetectionPage = () => {
   const [result, setResult] = useState(null);
 
   // Assistant Chat state
-  const [chatOpen, setChatOpen] = useState(true);
   const [chatMessages, setChatMessages] = useState([
     {
       role: "model",
