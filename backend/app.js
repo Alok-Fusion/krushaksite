@@ -1,14 +1,4 @@
-const path = require("path");
-
-// Load environment variables early
-if (process.env.NODE_ENV !== "PRODUCTION") {
-  require("dotenv").config({
-    path: path.resolve(__dirname, "config/.env"),
-  });
-  require("dotenv").config({
-    path: path.resolve(__dirname, ".env"),
-  });
-}
+require("./config/loadEnv");
 
 const express = require("express");
 const helmet = require("helmet");
