@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:6-jammy
+    container_name: krushak-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - krushak-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: krushak-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - DB_URL=mongodb://mongodb:27017/krushak
+      - NODE_ENV=production
+      - FRONTEND_URL=http://localhost:3000
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:80
+    env_file:
+      - ./backend/config/.env
+    depends_on:
+      - mongodb
+    networks:
+      - krushak-network
+
+  socket:
+    build:
+      context: ./socket
+      dockerfile: ../backend/Dockerfile
+    container_name: krushak-socket
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+    command: ["node", "index.js"]
+    networks:
+      - krushak-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: krushak-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - krushak-network
+
+networks:
+  krushak-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
