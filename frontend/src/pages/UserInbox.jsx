@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import { TfiGallery } from "react-icons/tfi";
 import styles from "../styles/styles";
-const ENDPOINT = "http://localhost:4000/";
+const ENDPOINT = process.env.REACT_APP_SOCKET_URL || "http://localhost:4000/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 const UserInbox = () => {
@@ -35,6 +35,15 @@ const UserInbox = () => {
       });
     });
   }, []);
+
+  useEffect(() => {
+    if (currentChat?._id) {
+      socketId.emit("joinConversation", currentChat._id);
+      return () => {
+        socketId.emit("leaveConversation", currentChat._id);
+      };
+    }
+  }, [currentChat]);
 
   useEffect(() => {
     arrivalMessage &&
@@ -109,6 +118,7 @@ const UserInbox = () => {
       senderId: user?._id,
       receiverId,
       text: newMessage,
+      conversationId: currentChat?._id,
     });
 
     try {

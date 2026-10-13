@@ -21,14 +21,17 @@ export const createProduct =
 
       const { data } = await axios.post(
         `${server}/product/create-product`,
-        name,
-        description,
-        category,
-        tags,
-        discountPrice,
-        stock,
-        shopId,
-        images,
+        {
+          name,
+          description,
+          category,
+          tags,
+          discountPrice,
+          stock,
+          shopId,
+          images,
+        },
+        { withCredentials: true }
       );
       dispatch({
         type: "productCreateSuccess",
@@ -37,7 +40,7 @@ export const createProduct =
     } catch (error) {
       dispatch({
         type: "productCreateFail",
-        payload: error.response.data.message,
+        payload: error.response?.data?.message || error.message,
       });
     }
   };
@@ -59,7 +62,7 @@ export const getAllProductsShop = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "getAllProductsShopFailed",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message,
     });
   }
 };
@@ -85,27 +88,42 @@ export const deleteProduct = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "deleteProductFailed",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message,
     });
   }
 };
 
-// get all products
-export const getAllProducts = () => async (dispatch) => {
+// get all products with optional filters, search, and pagination
+export const getAllProducts = (params = {}) => async (dispatch) => {
   try {
     dispatch({
       type: "getAllProductsRequest",
     });
 
-    const { data } = await axios.get(`${server}/product/get-all-products`);
+    const query = new URLSearchParams();
+    if (params.page) query.append("page", params.page);
+    if (params.limit) query.append("limit", params.limit);
+    if (params.search) query.append("search", params.search);
+    if (params.category && params.category !== "All") query.append("category", params.category);
+    if (params.minPrice) query.append("minPrice", params.minPrice);
+    if (params.maxPrice) query.append("maxPrice", params.maxPrice);
+
+    const queryString = query.toString() ? `?${query.toString()}` : "";
+    const { data } = await axios.get(`${server}/product/get-all-products${queryString}`);
+
     dispatch({
       type: "getAllProductsSuccess",
       payload: data.products,
+      pagination: {
+        totalProducts: data.totalProducts,
+        totalPages: data.totalPages,
+        currentPage: data.currentPage,
+      },
     });
   } catch (error) {
     dispatch({
       type: "getAllProductsFailed",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message,
     });
   }
 };

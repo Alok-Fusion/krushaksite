@@ -13,9 +13,10 @@ const validate = (schema) => (req, res, next) => {
 
     next();
   } catch (error) {
-    if (error.errors) {
-      const formattedErrors = error.errors.map((err) => ({
-        field: err.path.slice(1).join("."),
+    const issues = error.errors || error.issues;
+    if (issues && Array.isArray(issues)) {
+      const formattedErrors = issues.map((err) => ({
+        field: err.path ? err.path.slice(1).join(".") : "field",
         message: err.message,
       }));
       return res.status(400).json({
@@ -26,7 +27,7 @@ const validate = (schema) => (req, res, next) => {
     }
     return res.status(400).json({
       success: false,
-      message: error.message || "Invalid request payload",
+      message: `Validation failed: ${error.message || "Invalid request payload"}`,
     });
   }
 };

@@ -1,10 +1,10 @@
-const socketIO = require("socket.io");
 const http = require("http");
 const express = require("express");
 const cors = require("cors");
+const socketIO = require("socket.io");
+
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
 
 require("dotenv").config({
   path: "./.env",
@@ -13,15 +13,32 @@ require("dotenv").config({
 app.use(cors());
 app.use(express.json());
 
+const io = socketIO(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
 app.get("/", (req, res) => {
-  res.send("Hello world from socket server!");
+  res.status(200).json({ status: "ok", message: "Krushak Socket Server is running" });
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "healthy", onlineUsersCount: users.length });
 });
 
 let users = [];
 
 const addUser = (userId, socketId) => {
-  !users.some((user) => user.userId === userId) &&
+  if (!userId) return;
+  const existingUserIndex = users.findIndex((user) => user.userId === userId);
+  if (existingUserIndex !== -1) {
+    users[existingUserIndex].socketId = socketId;
+  } else {
     users.push({ userId, socketId });
+  }
 };
 
 const removeUser = (socketId) => {
@@ -32,82 +49,79 @@ const getUser = (receiverId) => {
   return users.find((user) => user.userId === receiverId);
 };
 
-// Define a message object with a seen property
-const createMessage = ({ senderId, receiverId, text, images }) => ({
-  senderId,
-  receiverId,
-  text,
-  images,
-  seen: false,
-});
-
 io.on("connection", (socket) => {
-  // when connect
-  console.log(`a user is connected`);
+  console.log(`Socket client connected: ${socket.id}`);
 
-  // take userId and socketId from user
+  // Register online user
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
     io.emit("getUsers", users);
   });
 
-  // send and get message
-  const messages = {}; // Object to track messages sent to each user
+  // Join a dedicated conversation room
+  socket.on("joinConversation", (conversationId) => {
+    if (conversationId) {
+      socket.join(conversationId);
+      console.log(`Socket ${socket.id} joined conversation room: ${conversationId}`);
+    }
+  });
 
-  socket.on("sendMessage", ({ senderId, receiverId, text, images }) => {
-    const message = createMessage({ senderId, receiverId, text, images });
+  // Leave a conversation room
+  socket.on("leaveConversation", (conversationId) => {
+    if (conversationId) {
+      socket.leave(conversationId);
+      console.log(`Socket ${socket.id} left conversation room: ${conversationId}`);
+    }
+  });
 
-    const user = getUser(receiverId);
+  // Send message - supports both room broadcasting and direct receiver delivery
+  socket.on("sendMessage", ({ senderId, receiverId, text, images, conversationId }) => {
+    const messagePayload = {
+      senderId,
+      receiverId,
+      text,
+      images,
+      conversationId,
+      createdAt: Date.now(),
+    };
 
-    // Store the messages in the `messages` object
-    if (!messages[receiverId]) {
-      messages[receiverId] = [message];
+    // If conversation room exists, broadcast to that room
+    if (conversationId) {
+      socket.to(conversationId).emit("getMessage", messagePayload);
+    }
+
+    // Also forward directly to receiver's socket if online
+    const receiver = getUser(receiverId);
+    if (receiver && receiver.socketId) {
+      io.to(receiver.socketId).emit("getMessage", messagePayload);
+    }
+  });
+
+  // Update last message notification
+  socket.on("updateLastMessage", ({ lastMessage, lastMessagesId, conversationId }) => {
+    if (conversationId) {
+      socket.to(conversationId).emit("getLastMessage", {
+        lastMessage,
+        lastMessagesId,
+        conversationId,
+      });
     } else {
-      messages[receiverId].push(message);
-    }
-
-    // send the message to the recevier
-    io.to(user?.socketId).emit("getMessage", message);
-  });
-
-  socket.on("messageSeen", ({ senderId, receiverId, messageId }) => {
-    const user = getUser(senderId);
-
-    // update the seen flag for the message
-    if (messages[senderId]) {
-      const message = messages[senderId].find(
-        (message) =>
-          message.receiverId === receiverId && message.id === messageId
-      );
-      if (message) {
-        message.seen = true;
-
-        // send a message seen event to the sender
-        io.to(user?.socketId).emit("messageSeen", {
-          senderId,
-          receiverId,
-          messageId,
-        });
-      }
+      io.emit("getLastMessage", {
+        lastMessage,
+        lastMessagesId,
+      });
     }
   });
 
-  // update and get last message
-  socket.on("updateLastMessage", ({ lastMessage, lastMessagesId }) => {
-    io.emit("getLastMessage", {
-      lastMessage,
-      lastMessagesId,
-    });
-  });
-
-  //when disconnect
+  // Handle disconnect
   socket.on("disconnect", () => {
-    console.log(`a user disconnected!`);
+    console.log(`Socket disconnected: ${socket.id}`);
     removeUser(socket.id);
     io.emit("getUsers", users);
   });
 });
 
-server.listen(process.env.PORT || 4000, () => {
-  console.log(`server is running on port ${process.env.PORT || 4000}`);
+const PORT = process.env.PORT || 4000;
+server.listen(PORT, () => {
+  console.log(`Krushak Socket Server is running on port ${PORT}`);
 });

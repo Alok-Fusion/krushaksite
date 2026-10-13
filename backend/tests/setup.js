@@ -1,0 +1,10 @@
+process.env.NODE_ENV = "test";
+process.env.PORT = "8001";
+process.env.JWT_SECRET_KEY = "test_super_secret_jwt_key";
+process.env.JWT_EXPIRES = "7d";
+process.env.ACTIVATION_SECRET = "test_activation_secret";
+process.env.STRIPE_API_KEY = "pk_test_sample";
+process.env.STRIPE_SECRET_KEY = "sk_test_sample";
+process.env.STRIPE_WEBHOOK_SECRET = "whsec_test_sample";
+process.env.ALLOWED_ORIGINS = "http://localhost:3000";
+process.env.FRONTEND_URL = "http://localhost:3000";

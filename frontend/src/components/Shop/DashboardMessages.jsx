@@ -9,7 +9,7 @@ import styles from "../../styles/styles";
 import { TfiGallery } from "react-icons/tfi";
 import socketIO from "socket.io-client";
 import { format } from "timeago.js";
-const ENDPOINT = "http://localhost:4000/";
+const ENDPOINT = process.env.REACT_APP_SOCKET_URL || "http://localhost:4000/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 const DashboardMessages = () => {
   const { seller,isLoading } = useSelector((state) => state.seller);
@@ -34,6 +34,15 @@ const DashboardMessages = () => {
       });
     });
   }, []);
+
+  useEffect(() => {
+    if (currentChat?._id) {
+      socketId.emit("joinConversation", currentChat._id);
+      return () => {
+        socketId.emit("leaveConversation", currentChat._id);
+      };
+    }
+  }, [currentChat]);
 
   useEffect(() => {
     arrivalMessage &&
@@ -109,6 +118,7 @@ const DashboardMessages = () => {
       senderId: seller._id,
       receiverId,
       text: newMessage,
+      conversationId: currentChat?._id,
     });
 
     try {

@@ -2,6 +2,12 @@ import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoading: true,
+  allProducts: [],
+  pagination: {
+    totalProducts: 0,
+    totalPages: 1,
+    currentPage: 1,
+  },
 };
 
 export const productReducer = createReducer(initialState, {
@@ -52,12 +58,17 @@ export const productReducer = createReducer(initialState, {
   getAllProductsSuccess: (state, action) => {
     state.isLoading = false;
     state.allProducts = action.payload;
+    state.pagination = action.pagination || {
+      totalProducts: action.payload?.length || 0,
+      totalPages: 1,
+      currentPage: 1,
+    };
   },
   getAllProductsFailed: (state, action) => {
     state.isLoading = false;
     state.error = action.payload;
   },
-  
+
   clearErrors: (state) => {
     state.error = null;
   },
