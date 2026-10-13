@@ -1,0 +1,1134 @@
+{
+  "data_source": "synthetic",
+  "timestamp": "2026-10-13T18:25:40.214375Z",
+  "evaluation_notes": "Evaluated on a time-based validation holdout (last 60 days of each series). Data is synthetic, calibrated to Maharashtra APMC market dynamics. These metrics represent synthetic simulation accuracy, not real-world performance.",
+  "split_strategy": "Time-based holdout (last 60 days)",
+  "crops_count": 8,
+  "markets_count": 6,
+  "total_validation_points": 2880,
+  "overall": {
+    "lightgbm": {
+      "mae": 66.01,
+      "rmse": 135.37,
+      "mape": 1.86
+    },
+    "naive_last_value": {
+      "mae": 53.35,
+      "rmse": 120.54,
+      "mape": 1.5
+    },
+    "moving_average_7d": {
+      "mae": 99.93,
+      "rmse": 191.62,
+      "mape": 2.9
+    },
+    "beats_naive_baseline": false,
+    "beats_ma7_baseline": true
+  },
+  "per_series": {
+    "onion_Lasalgaon": {
+      "crop": "onion",
+      "market": "Lasalgaon",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 68.11,
+        "rmse": 111.86,
+        "mape": 4.15
+      },
+      "naive_last_value": {
+        "mae": 41.0,
+        "rmse": 91.08,
+        "mape": 2.26
+      },
+      "moving_average_7d": {
+        "mae": 89.2,
+        "rmse": 121.97,
+        "mape": 5.13
+      },
+      "residual_std": 110.76,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "onion_Pune": {
+      "crop": "onion",
+      "market": "Pune",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 25.25,
+        "rmse": 32.18,
+        "mape": 1.34
+      },
+      "naive_last_value": {
+        "mae": 23.74,
+        "rmse": 30.27,
+        "mape": 1.26
+      },
+      "moving_average_7d": {
+        "mae": 40.35,
+        "rmse": 48.25,
+        "mape": 2.18
+      },
+      "residual_std": 31.94,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "onion_Nashik": {
+      "crop": "onion",
+      "market": "Nashik",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 61.46,
+        "rmse": 84.81,
+        "mape": 4.08
+      },
+      "naive_last_value": {
+        "mae": 30.23,
+        "rmse": 53.68,
+        "mape": 1.89
+      },
+      "moving_average_7d": {
+        "mae": 52.14,
+        "rmse": 83.46,
+        "mape": 3.31
+      },
+      "residual_std": 71.61,
+      "beats_naive": false,
+      "beats_ma7": false
+    },
+    "onion_Nagpur": {
+      "crop": "onion",
+      "market": "Nagpur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 35.06,
+        "rmse": 66.49,
+        "mape": 2.1
+      },
+      "naive_last_value": {
+        "mae": 33.49,
+        "rmse": 63.48,
+        "mape": 1.98
+      },
+      "moving_average_7d": {
+        "mae": 62.56,
+        "rmse": 102.23,
+        "mape": 3.8
+      },
+      "residual_std": 66.49,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "onion_Kolhapur": {
+      "crop": "onion",
+      "market": "Kolhapur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 29.03,
+        "rmse": 34.67,
+        "mape": 1.56
+      },
+      "naive_last_value": {
+        "mae": 27.55,
+        "rmse": 33.38,
+        "mape": 1.47
+      },
+      "moving_average_7d": {
+        "mae": 36.22,
+        "rmse": 43.44,
+        "mape": 1.94
+      },
+      "residual_std": 33.49,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "onion_Latur": {
+      "crop": "onion",
+      "market": "Latur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 33.35,
+        "rmse": 70.09,
+        "mape": 1.69
+      },
+      "naive_last_value": {
+        "mae": 35.42,
+        "rmse": 72.84,
+        "mape": 1.8
+      },
+      "moving_average_7d": {
+        "mae": 66.15,
+        "rmse": 102.63,
+        "mape": 3.33
+      },
+      "residual_std": 69.19,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "tomato_Lasalgaon": {
+      "crop": "tomato",
+      "market": "Lasalgaon",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 28.53,
+        "rmse": 34.53,
+        "mape": 1.61
+      },
+      "naive_last_value": {
+        "mae": 31.94,
+        "rmse": 39.11,
+        "mape": 1.77
+      },
+      "moving_average_7d": {
+        "mae": 65.04,
+        "rmse": 76.5,
+        "mape": 3.79
+      },
+      "residual_std": 34.45,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "tomato_Pune": {
+      "crop": "tomato",
+      "market": "Pune",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 44.51,
+        "rmse": 76.45,
+        "mape": 2.02
+      },
+      "naive_last_value": {
+        "mae": 43.81,
+        "rmse": 74.5,
+        "mape": 2.09
+      },
+      "moving_average_7d": {
+        "mae": 106.49,
+        "rmse": 154.93,
+        "mape": 5.21
+      },
+      "residual_std": 75.79,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "tomato_Nashik": {
+      "crop": "tomato",
+      "market": "Nashik",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 66.58,
+        "rmse": 113.68,
+        "mape": 3.13
+      },
+      "naive_last_value": {
+        "mae": 56.49,
+        "rmse": 113.55,
+        "mape": 2.67
+      },
+      "moving_average_7d": {
+        "mae": 146.04,
+        "rmse": 213.77,
+        "mape": 6.89
+      },
+      "residual_std": 111.0,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "tomato_Nagpur": {
+      "crop": "tomato",
+      "market": "Nagpur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 48.96,
+        "rmse": 77.41,
+        "mape": 2.3
+      },
+      "naive_last_value": {
+        "mae": 51.66,
+        "rmse": 81.59,
+        "mape": 2.48
+      },
+      "moving_average_7d": {
+        "mae": 118.14,
+        "rmse": 151.41,
+        "mape": 5.8
+      },
+      "residual_std": 75.83,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "tomato_Kolhapur": {
+      "crop": "tomato",
+      "market": "Kolhapur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 45.31,
+        "rmse": 90.65,
+        "mape": 2.03
+      },
+      "naive_last_value": {
+        "mae": 44.61,
+        "rmse": 90.96,
+        "mape": 2.04
+      },
+      "moving_average_7d": {
+        "mae": 109.39,
+        "rmse": 168.47,
+        "mape": 5.11
+      },
+      "residual_std": 90.42,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "tomato_Latur": {
+      "crop": "tomato",
+      "market": "Latur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 39.63,
+        "rmse": 69.42,
+        "mape": 2.09
+      },
+      "naive_last_value": {
+        "mae": 46.56,
+        "rmse": 74.52,
+        "mape": 2.43
+      },
+      "moving_average_7d": {
+        "mae": 111.36,
+        "rmse": 132.34,
+        "mape": 5.92
+      },
+      "residual_std": 68.95,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "potato_Lasalgaon": {
+      "crop": "potato",
+      "market": "Lasalgaon",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 34.99,
+        "rmse": 64.95,
+        "mape": 2.69
+      },
+      "naive_last_value": {
+        "mae": 21.15,
+        "rmse": 45.24,
+        "mape": 1.55
+      },
+      "moving_average_7d": {
+        "mae": 43.69,
+        "rmse": 70.53,
+        "mape": 3.26
+      },
+      "residual_std": 61.75,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "potato_Pune": {
+      "crop": "potato",
+      "market": "Pune",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 43.6,
+        "rmse": 67.49,
+        "mape": 2.77
+      },
+      "naive_last_value": {
+        "mae": 25.26,
+        "rmse": 53.36,
+        "mape": 1.57
+      },
+      "moving_average_7d": {
+        "mae": 45.83,
+        "rmse": 79.51,
+        "mape": 2.83
+      },
+      "residual_std": 67.36,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "potato_Nashik": {
+      "crop": "potato",
+      "market": "Nashik",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 25.75,
+        "rmse": 64.08,
+        "mape": 1.49
+      },
+      "naive_last_value": {
+        "mae": 25.62,
+        "rmse": 62.35,
+        "mape": 1.47
+      },
+      "moving_average_7d": {
+        "mae": 56.49,
+        "rmse": 98.13,
+        "mape": 3.2
+      },
+      "residual_std": 64.03,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "potato_Nagpur": {
+      "crop": "potato",
+      "market": "Nagpur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 14.68,
+        "rmse": 28.63,
+        "mape": 0.88
+      },
+      "naive_last_value": {
+        "mae": 20.87,
+        "rmse": 33.21,
+        "mape": 1.27
+      },
+      "moving_average_7d": {
+        "mae": 27.79,
+        "rmse": 46.67,
+        "mape": 1.66
+      },
+      "residual_std": 28.0,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "potato_Kolhapur": {
+      "crop": "potato",
+      "market": "Kolhapur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 42.5,
+        "rmse": 76.3,
+        "mape": 2.56
+      },
+      "naive_last_value": {
+        "mae": 32.16,
+        "rmse": 72.31,
+        "mape": 1.86
+      },
+      "moving_average_7d": {
+        "mae": 71.68,
+        "rmse": 107.35,
+        "mape": 4.14
+      },
+      "residual_std": 72.84,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "potato_Latur": {
+      "crop": "potato",
+      "market": "Latur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 29.1,
+        "rmse": 45.36,
+        "mape": 1.96
+      },
+      "naive_last_value": {
+        "mae": 18.1,
+        "rmse": 35.2,
+        "mape": 1.21
+      },
+      "moving_average_7d": {
+        "mae": 27.75,
+        "rmse": 47.44,
+        "mape": 1.88
+      },
+      "residual_std": 45.25,
+      "beats_naive": false,
+      "beats_ma7": false
+    },
+    "wheat_Lasalgaon": {
+      "crop": "wheat",
+      "market": "Lasalgaon",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 17.39,
+        "rmse": 22.35,
+        "mape": 0.74
+      },
+      "naive_last_value": {
+        "mae": 20.86,
+        "rmse": 29.44,
+        "mape": 0.89
+      },
+      "moving_average_7d": {
+        "mae": 27.52,
+        "rmse": 34.3,
+        "mape": 1.18
+      },
+      "residual_std": 19.98,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "wheat_Pune": {
+      "crop": "wheat",
+      "market": "Pune",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 27.11,
+        "rmse": 32.53,
+        "mape": 1.05
+      },
+      "naive_last_value": {
+        "mae": 25.27,
+        "rmse": 31.68,
+        "mape": 0.98
+      },
+      "moving_average_7d": {
+        "mae": 24.81,
+        "rmse": 30.28,
+        "mape": 0.97
+      },
+      "residual_std": 32.24,
+      "beats_naive": false,
+      "beats_ma7": false
+    },
+    "wheat_Nashik": {
+      "crop": "wheat",
+      "market": "Nashik",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 20.4,
+        "rmse": 24.61,
+        "mape": 0.85
+      },
+      "naive_last_value": {
+        "mae": 22.36,
+        "rmse": 29.39,
+        "mape": 0.94
+      },
+      "moving_average_7d": {
+        "mae": 28.03,
+        "rmse": 35.13,
+        "mape": 1.18
+      },
+      "residual_std": 23.84,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "wheat_Nagpur": {
+      "crop": "wheat",
+      "market": "Nagpur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 17.37,
+        "rmse": 21.55,
+        "mape": 0.7
+      },
+      "naive_last_value": {
+        "mae": 20.99,
+        "rmse": 27.65,
+        "mape": 0.84
+      },
+      "moving_average_7d": {
+        "mae": 33.54,
+        "rmse": 41.44,
+        "mape": 1.33
+      },
+      "residual_std": 21.07,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "wheat_Kolhapur": {
+      "crop": "wheat",
+      "market": "Kolhapur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 34.37,
+        "rmse": 61.41,
+        "mape": 1.28
+      },
+      "naive_last_value": {
+        "mae": 33.94,
+        "rmse": 61.97,
+        "mape": 1.25
+      },
+      "moving_average_7d": {
+        "mae": 74.19,
+        "rmse": 100.03,
+        "mape": 2.71
+      },
+      "residual_std": 61.37,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "wheat_Latur": {
+      "crop": "wheat",
+      "market": "Latur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 110.52,
+        "rmse": 164.09,
+        "mape": 5.0
+      },
+      "naive_last_value": {
+        "mae": 41.98,
+        "rmse": 95.86,
+        "mape": 1.86
+      },
+      "moving_average_7d": {
+        "mae": 91.75,
+        "rmse": 164.09,
+        "mape": 4.15
+      },
+      "residual_std": 163.44,
+      "beats_naive": false,
+      "beats_ma7": false
+    },
+    "soybean_Lasalgaon": {
+      "crop": "soybean",
+      "market": "Lasalgaon",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 97.21,
+        "rmse": 122.46,
+        "mape": 1.93
+      },
+      "naive_last_value": {
+        "mae": 61.61,
+        "rmse": 75.55,
+        "mape": 1.23
+      },
+      "moving_average_7d": {
+        "mae": 105.57,
+        "rmse": 124.78,
+        "mape": 2.07
+      },
+      "residual_std": 109.04,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "soybean_Pune": {
+      "crop": "soybean",
+      "market": "Pune",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 89.17,
+        "rmse": 164.71,
+        "mape": 1.56
+      },
+      "naive_last_value": {
+        "mae": 85.29,
+        "rmse": 162.54,
+        "mape": 1.5
+      },
+      "moving_average_7d": {
+        "mae": 191.95,
+        "rmse": 273.06,
+        "mape": 3.5
+      },
+      "residual_std": 163.57,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "soybean_Nashik": {
+      "crop": "soybean",
+      "market": "Nashik",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 74.77,
+        "rmse": 129.38,
+        "mape": 1.39
+      },
+      "naive_last_value": {
+        "mae": 74.52,
+        "rmse": 138.68,
+        "mape": 1.4
+      },
+      "moving_average_7d": {
+        "mae": 116.65,
+        "rmse": 196.33,
+        "mape": 2.19
+      },
+      "residual_std": 120.78,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "soybean_Nagpur": {
+      "crop": "soybean",
+      "market": "Nagpur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 64.25,
+        "rmse": 77.05,
+        "mape": 1.21
+      },
+      "naive_last_value": {
+        "mae": 59.96,
+        "rmse": 77.14,
+        "mape": 1.13
+      },
+      "moving_average_7d": {
+        "mae": 111.82,
+        "rmse": 134.01,
+        "mape": 2.12
+      },
+      "residual_std": 57.73,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "soybean_Kolhapur": {
+      "crop": "soybean",
+      "market": "Kolhapur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 84.14,
+        "rmse": 138.52,
+        "mape": 1.49
+      },
+      "naive_last_value": {
+        "mae": 69.73,
+        "rmse": 148.95,
+        "mape": 1.2
+      },
+      "moving_average_7d": {
+        "mae": 132.04,
+        "rmse": 226.28,
+        "mape": 2.25
+      },
+      "residual_std": 138.35,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "soybean_Latur": {
+      "crop": "soybean",
+      "market": "Latur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 61.35,
+        "rmse": 75.97,
+        "mape": 1.21
+      },
+      "naive_last_value": {
+        "mae": 62.23,
+        "rmse": 78.17,
+        "mape": 1.22
+      },
+      "moving_average_7d": {
+        "mae": 80.53,
+        "rmse": 99.71,
+        "mape": 1.57
+      },
+      "residual_std": 72.15,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "cotton_Lasalgaon": {
+      "crop": "cotton",
+      "market": "Lasalgaon",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 125.82,
+        "rmse": 167.35,
+        "mape": 1.88
+      },
+      "naive_last_value": {
+        "mae": 68.67,
+        "rmse": 88.22,
+        "mape": 1.02
+      },
+      "moving_average_7d": {
+        "mae": 104.82,
+        "rmse": 138.9,
+        "mape": 1.54
+      },
+      "residual_std": 153.06,
+      "beats_naive": false,
+      "beats_ma7": false
+    },
+    "cotton_Pune": {
+      "crop": "cotton",
+      "market": "Pune",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 126.63,
+        "rmse": 253.69,
+        "mape": 1.58
+      },
+      "naive_last_value": {
+        "mae": 121.06,
+        "rmse": 233.25,
+        "mape": 1.5
+      },
+      "moving_average_7d": {
+        "mae": 208.36,
+        "rmse": 348.5,
+        "mape": 2.57
+      },
+      "residual_std": 249.62,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "cotton_Nashik": {
+      "crop": "cotton",
+      "market": "Nashik",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 79.44,
+        "rmse": 91.88,
+        "mape": 1.18
+      },
+      "naive_last_value": {
+        "mae": 58.09,
+        "rmse": 78.81,
+        "mape": 0.86
+      },
+      "moving_average_7d": {
+        "mae": 92.78,
+        "rmse": 112.3,
+        "mape": 1.35
+      },
+      "residual_std": 88.64,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "cotton_Nagpur": {
+      "crop": "cotton",
+      "market": "Nagpur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 84.82,
+        "rmse": 105.45,
+        "mape": 1.15
+      },
+      "naive_last_value": {
+        "mae": 86.49,
+        "rmse": 107.7,
+        "mape": 1.19
+      },
+      "moving_average_7d": {
+        "mae": 110.33,
+        "rmse": 135.77,
+        "mape": 1.53
+      },
+      "residual_std": 95.61,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "cotton_Kolhapur": {
+      "crop": "cotton",
+      "market": "Kolhapur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 133.07,
+        "rmse": 166.06,
+        "mape": 1.74
+      },
+      "naive_last_value": {
+        "mae": 70.89,
+        "rmse": 90.89,
+        "mape": 0.93
+      },
+      "moving_average_7d": {
+        "mae": 100.73,
+        "rmse": 125.65,
+        "mape": 1.31
+      },
+      "residual_std": 128.57,
+      "beats_naive": false,
+      "beats_ma7": false
+    },
+    "cotton_Latur": {
+      "crop": "cotton",
+      "market": "Latur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 129.79,
+        "rmse": 170.63,
+        "mape": 1.78
+      },
+      "naive_last_value": {
+        "mae": 92.72,
+        "rmse": 163.68,
+        "mape": 1.26
+      },
+      "moving_average_7d": {
+        "mae": 142.52,
+        "rmse": 236.7,
+        "mape": 1.9
+      },
+      "residual_std": 161.24,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "maize_Lasalgaon": {
+      "crop": "maize",
+      "market": "Lasalgaon",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 18.25,
+        "rmse": 23.57,
+        "mape": 0.8
+      },
+      "naive_last_value": {
+        "mae": 21.95,
+        "rmse": 28.28,
+        "mape": 0.96
+      },
+      "moving_average_7d": {
+        "mae": 23.71,
+        "rmse": 28.74,
+        "mape": 1.04
+      },
+      "residual_std": 23.48,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "maize_Pune": {
+      "crop": "maize",
+      "market": "Pune",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 43.57,
+        "rmse": 84.03,
+        "mape": 1.59
+      },
+      "naive_last_value": {
+        "mae": 39.4,
+        "rmse": 77.81,
+        "mape": 1.45
+      },
+      "moving_average_7d": {
+        "mae": 98.77,
+        "rmse": 135.01,
+        "mape": 3.58
+      },
+      "residual_std": 82.98,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "maize_Nashik": {
+      "crop": "maize",
+      "market": "Nashik",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 57.07,
+        "rmse": 124.6,
+        "mape": 2.34
+      },
+      "naive_last_value": {
+        "mae": 46.02,
+        "rmse": 122.96,
+        "mape": 1.9
+      },
+      "moving_average_7d": {
+        "mae": 99.04,
+        "rmse": 168.99,
+        "mape": 3.97
+      },
+      "residual_std": 119.66,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "maize_Nagpur": {
+      "crop": "maize",
+      "market": "Nagpur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 29.94,
+        "rmse": 70.65,
+        "mape": 1.42
+      },
+      "naive_last_value": {
+        "mae": 30.64,
+        "rmse": 70.8,
+        "mape": 1.45
+      },
+      "moving_average_7d": {
+        "mae": 61.93,
+        "rmse": 110.21,
+        "mape": 2.98
+      },
+      "residual_std": 69.56,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "maize_Kolhapur": {
+      "crop": "maize",
+      "market": "Kolhapur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 34.07,
+        "rmse": 68.92,
+        "mape": 1.62
+      },
+      "naive_last_value": {
+        "mae": 34.13,
+        "rmse": 74.98,
+        "mape": 1.63
+      },
+      "moving_average_7d": {
+        "mae": 63.03,
+        "rmse": 104.36,
+        "mape": 3.04
+      },
+      "residual_std": 68.65,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "maize_Latur": {
+      "crop": "maize",
+      "market": "Latur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 18.39,
+        "rmse": 22.6,
+        "mape": 0.8
+      },
+      "naive_last_value": {
+        "mae": 22.71,
+        "rmse": 27.99,
+        "mape": 0.99
+      },
+      "moving_average_7d": {
+        "mae": 17.94,
+        "rmse": 23.57,
+        "mape": 0.78
+      },
+      "residual_std": 20.79,
+      "beats_naive": true,
+      "beats_ma7": false
+    },
+    "tur_Lasalgaon": {
+      "crop": "tur",
+      "market": "Lasalgaon",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 110.89,
+        "rmse": 145.52,
+        "mape": 1.77
+      },
+      "naive_last_value": {
+        "mae": 82.53,
+        "rmse": 108.23,
+        "mape": 1.31
+      },
+      "moving_average_7d": {
+        "mae": 155.67,
+        "rmse": 225.99,
+        "mape": 2.41
+      },
+      "residual_std": 145.01,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "tur_Pune": {
+      "crop": "tur",
+      "market": "Pune",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 97.6,
+        "rmse": 152.29,
+        "mape": 1.39
+      },
+      "naive_last_value": {
+        "mae": 98.42,
+        "rmse": 153.35,
+        "mape": 1.39
+      },
+      "moving_average_7d": {
+        "mae": 137.61,
+        "rmse": 202.35,
+        "mape": 1.94
+      },
+      "residual_std": 151.06,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "tur_Nashik": {
+      "crop": "tur",
+      "market": "Nashik",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 142.38,
+        "rmse": 284.3,
+        "mape": 2.16
+      },
+      "naive_last_value": {
+        "mae": 89.94,
+        "rmse": 220.49,
+        "mape": 1.38
+      },
+      "moving_average_7d": {
+        "mae": 185.73,
+        "rmse": 358.07,
+        "mape": 2.75
+      },
+      "residual_std": 263.08,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "tur_Nagpur": {
+      "crop": "tur",
+      "market": "Nagpur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 209.62,
+        "rmse": 346.69,
+        "mape": 2.92
+      },
+      "naive_last_value": {
+        "mae": 118.77,
+        "rmse": 271.76,
+        "mape": 1.62
+      },
+      "moving_average_7d": {
+        "mae": 256.85,
+        "rmse": 457.39,
+        "mape": 3.38
+      },
+      "residual_std": 335.71,
+      "beats_naive": false,
+      "beats_ma7": true
+    },
+    "tur_Kolhapur": {
+      "crop": "tur",
+      "market": "Kolhapur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 136.96,
+        "rmse": 314.91,
+        "mape": 1.77
+      },
+      "naive_last_value": {
+        "mae": 142.78,
+        "rmse": 322.01,
+        "mape": 1.86
+      },
+      "moving_average_7d": {
+        "mae": 303.86,
+        "rmse": 515.01,
+        "mape": 3.86
+      },
+      "residual_std": 312.05,
+      "beats_naive": true,
+      "beats_ma7": true
+    },
+    "tur_Latur": {
+      "crop": "tur",
+      "market": "Latur",
+      "validation_samples": 60,
+      "lightgbm": {
+        "mae": 175.7,
+        "rmse": 343.75,
+        "mape": 2.41
+      },
+      "naive_last_value": {
+        "mae": 147.06,
+        "rmse": 325.81,
+        "mape": 1.97
+      },
+      "moving_average_7d": {
+        "mae": 338.34,
+        "rmse": 524.32,
+        "mape": 4.56
+      },
+      "residual_std": 328.07,
+      "beats_naive": false,
+      "beats_ma7": true
+    }
+  }
+}
