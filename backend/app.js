@@ -82,6 +82,7 @@ const conversation = require("./controller/conversation");
 const message = require("./controller/message");
 const withdraw = require("./controller/withdraw");
 const lands = require("./controller/lands");
+const ai = require("./controller/ai");
 
 // Route mounts
 app.use("/api/v2/user", user);
@@ -93,6 +94,8 @@ app.use("/api/v2/product", product);
 app.use("/api/v2/payment", payment);
 app.use("/api/v2/withdraw", withdraw);
 app.use("/api/v2/lands", lands);
+app.use("/api/v2/ai", ai);
+app.use("/api/ai", ai); // alias for /api/ai/disease and /api/ai/chat
 
 // Centralized error handling
 app.use(ErrorHandler);

@@ -28,6 +28,7 @@ import UserInbox from "../pages/UserInbox.jsx";
 import LandsPage from "../pages/LandsPage.jsx";
 import LandsDetailsPage from "../pages/LandsDetailsPage.jsx";
 import AboutUsPage from "../pages/AboutUsPge.jsx";
+import DiseaseDetectionPage from "../pages/DiseaseDetectionPage.jsx";
 export { 
     LandsPage,
     LoginPage,
@@ -59,4 +60,5 @@ export {
     UserInbox,
     LandsDetailsPage,
     AboutUsPage,
+    DiseaseDetectionPage,
 };

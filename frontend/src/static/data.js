@@ -21,6 +21,10 @@ export const navItems = [
       url: "/guide",
     },
     {
+      title: "Crop Doctor (AI)",
+      url: "/disease-detection",
+    },
+    {
       title: "FAQ",
       url: "/faq",
     },
