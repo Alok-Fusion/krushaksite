@@ -4,6 +4,7 @@ import { CiMap } from 'react-icons/ci'
 import { FiPackage, FiShoppingBag } from 'react-icons/fi'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const AdminHeader = () => {
     const {user} = useSelector((state) => state.user);
@@ -16,7 +17,8 @@ const AdminHeader = () => {
         </Link>
       </div>
       <div className="flex items-center">
-        <div className="flex items-center mr-4">
+        <div className="flex items-center gap-2 mr-4">
+        <LanguageSwitcher />
         <Link to="/dashboard-lands" className="800px:block hidden">
             <CiMap
               color="#008000"

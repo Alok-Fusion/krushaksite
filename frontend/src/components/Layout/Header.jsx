@@ -22,8 +22,11 @@ import img1 from "../../Assests/Logo/a.jpeg";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header = ({ activeHeading }) => {
+  const { t } = useTranslation();
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { isSeller } = useSelector((state) => state.seller);
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -164,7 +167,7 @@ const Header = ({ activeHeading }) => {
             <div className="flex items-center w-full h-[40px] px-2 border-[#0ea5e9] border-[2px] rounded-md bg-white focus-within:ring-2 focus-within:ring-[#0ea5e9]/30">
               <input
                 type="text"
-                placeholder="Search Product or crop..."
+                placeholder={t("nav.searchPlaceholder")}
                 value={searchTerm}
                 onChange={handleSearchChange}
                 className="h-full flex-1 px-1 text-sm outline-none bg-transparent"
@@ -174,7 +177,7 @@ const Header = ({ activeHeading }) => {
               <select
                 value={voiceLang}
                 onChange={(e) => setVoiceLang(e.target.value)}
-                title="Voice search language"
+                title={t("nav.voiceSearch", "Voice search language")}
                 className="text-xs bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded px-1.5 py-1 text-slate-700 font-medium cursor-pointer outline-none mr-1.5"
               >
                 <option value="en-IN">EN</option>
@@ -189,8 +192,8 @@ const Header = ({ activeHeading }) => {
                   onClick={toggleListening}
                   title={
                     isListening
-                      ? "Listening... click to stop"
-                      : "Voice search in English, Hindi, or Marathi"
+                      ? t("common.loading")
+                      : t("nav.voiceSearch", "Voice search in English, Hindi, or Marathi")
                   }
                   className={`p-1 rounded-full transition flex items-center justify-center mr-1 ${
                     isListening
@@ -220,14 +223,14 @@ const Header = ({ activeHeading }) => {
             {isListening && (
               <div className="absolute top-[44px] left-0 bg-red-600 text-white text-xs px-2.5 py-1 rounded shadow-md z-[12] flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-white animate-ping" />
-                Listening in {voiceLang === "hi-IN" ? "Hindi (हिंदी)" : voiceLang === "mr-IN" ? "Marathi (मराठी)" : "English"}...
+                {t("nav.listening", { lang: voiceLang === "hi-IN" ? "हिंदी" : voiceLang === "mr-IN" ? "मराठी" : "English" })}
               </div>
             )}
 
             {isNormalizing && (
               <div className="absolute top-[44px] left-0 bg-sky-600 text-white text-xs px-2.5 py-1 rounded shadow-md z-[12] flex items-center gap-1.5">
                 <AiOutlineLoading3Quarters size={12} className="animate-spin" />
-                Interpreting voice query with Gemini AI...
+                {t("nav.interpretingVoice", "Interpreting voice query with Gemini AI...")}
               </div>
             )}
 
@@ -254,13 +257,16 @@ const Header = ({ activeHeading }) => {
             ) : null}
           </div>
 
-          <div className={`${styles.button}` }>
-            <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
-              <h1 className="text-[#fff] flex items-center  ">
-                {isSeller ? "Go Dashboard" : "Become Seller"}{" "}
-                <IoIosArrowForward className="ml-1" />
-              </h1>
-            </Link>
+          <div className="flex items-center gap-3">
+            <LanguageSwitcher />
+            <div className={`${styles.button}`}>
+              <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
+                <h1 className="text-[#fff] flex items-center whitespace-nowrap">
+                  {isSeller ? t("nav.dashboard") : t("nav.becomeSeller")}{" "}
+                  <IoIosArrowForward className="ml-1" />
+                </h1>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -279,7 +285,7 @@ const Header = ({ activeHeading }) => {
               <button
                 className={`h-[100%] w-full flex justify-between items-center pl-10 bg-white font-sans text-lg text-[#0ea5e9] font-[500] select-none rounded-t-md`}
               >
-                All Categories
+                {t("nav.allCategories")}
               </button>
               <IoIosArrowDown
                  color="#0ea5e9"
@@ -401,21 +407,22 @@ const Header = ({ activeHeading }) => {
             className={`fixed w-full bg-[#0000005f] z-20 h-full top-0 left-0`}
           >
             <div className="fixed w-[70%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll">
-              <div className="w-full justify-between flex pr-3">
-                <div>
+              <div className="w-full justify-between items-center flex px-3 pt-3">
+                <div className="flex items-center gap-2">
                   <div
                     className="relative mr-[15px]"
                     onClick={() => setOpenWishlist(true) || setOpen(false)}
                   >
-                    <AiOutlineHeart size={30} className="mt-5 ml-3" />
-                    <span class="absolute right-0 top-0 rounded-full bg-[#4b3621] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
+                    <AiOutlineHeart size={30} className="mt-2 ml-1" />
+                    <span className="absolute right-0 top-0 rounded-full bg-[#4b3621] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
                       {wishlist && wishlist.length}
                     </span>
                   </div>
+                  <LanguageSwitcher />
                 </div>
                 <RxCross1
-                  size={30}
-                  className="ml-4 mt-5"
+                  size={26}
+                  className="cursor-pointer"
                   onClick={() => setOpen(false)}
                 />
               </div>
@@ -424,7 +431,7 @@ const Header = ({ activeHeading }) => {
                 <div className="flex items-center w-full h-[40px] px-2 border-[#008000] border-[2px] rounded-md bg-white">
                   <input
                     type="search"
-                    placeholder="Search Product..."
+                    placeholder={t("nav.searchPlaceholder")}
                     className="h-full flex-1 px-1 text-sm outline-none"
                     value={searchTerm}
                     onChange={handleSearchChange}
@@ -434,7 +441,7 @@ const Header = ({ activeHeading }) => {
                   <select
                     value={voiceLang}
                     onChange={(e) => setVoiceLang(e.target.value)}
-                    title="Voice search language"
+                    title={t("nav.voiceSearch", "Voice search language")}
                     className="text-xs bg-slate-100 border border-slate-300 rounded px-1 py-0.5 text-slate-700 outline-none mr-1"
                   >
                     <option value="en-IN">EN</option>
@@ -458,7 +465,7 @@ const Header = ({ activeHeading }) => {
 
                 {isListening && (
                   <div className="text-xs text-red-600 font-medium mt-1">
-                    Listening ({voiceLang})...
+                    {t("nav.listening", { lang: voiceLang === "hi-IN" ? "हिंदी" : voiceLang === "mr-IN" ? "मराठी" : "English" })}
                   </div>
                 )}
 
@@ -487,9 +494,9 @@ const Header = ({ activeHeading }) => {
 
               <Navbar active={activeHeading} />
               <div className={`${styles.button} ml-4 !rounded-[4px]`}>
-                <Link to="/shop-create">
+                <Link to={isSeller ? "/dashboard" : "/shop-create"}>
                   <h1 className="text-[#fff] flex items-center">
-                    Become Seller <IoIosArrowForward className="ml-1" />
+                    {isSeller ? t("nav.dashboard") : t("nav.becomeSeller")} <IoIosArrowForward className="ml-1" />
                   </h1>
                 </Link>
               </div>
@@ -514,13 +521,13 @@ const Header = ({ activeHeading }) => {
                       to="/login"
                       className="text-[18px] pr-[10px] text-[#000000b7]"
                     >
-                      Login /
+                      {t("nav.login")} /
                     </Link>
                     <Link
                       to="/sign-up"
                       className="text-[18px] text-[#000000b7]"
                     >
-                      Sign up
+                      {t("nav.signup")}
                     </Link>
                   </>
                 )}

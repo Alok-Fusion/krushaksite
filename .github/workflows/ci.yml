@@ -26,6 +26,9 @@ jobs:
         working-directory: ./backend
         run: npm ci
 
+      - name: Verify i18n key parity (en, hi, mr)
+        run: node scripts/check-i18n.js
+
       - name: Run backend tests
         working-directory: ./backend
         env:
@@ -34,3 +37,4 @@ jobs:
           STRIPE_SECRET_KEY: sk_test_mock
           STRIPE_API_KEY: pk_test_mock
         run: npm test
+

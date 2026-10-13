@@ -25,6 +25,7 @@ import {
 } from "react-icons/ai";
 import { MdOutlineAgriculture, MdLocationOn } from "react-icons/md";
 import { BiCalendarAlt } from "react-icons/bi";
+import { useTranslation } from "react-i18next";
 
 // Register Chart.js modules
 ChartJS.register(
@@ -39,10 +40,25 @@ ChartJS.register(
 );
 
 const PriceTrendsPage = () => {
+  const { i18n } = useTranslation();
   const [selectedCrop, setSelectedCrop] = useState("onion");
   const [selectedMarket, setSelectedMarket] = useState("Lasalgaon");
   const [days, setDays] = useState(7);
-  const [language, setLanguage] = useState("en"); // 'en' | 'hi' | 'mr'
+  const [language, setLanguage] = useState(
+    i18n.language?.startsWith("hi") ? "hi" : i18n.language?.startsWith("mr") ? "mr" : "en"
+  ); // 'en' | 'hi' | 'mr'
+
+  useEffect(() => {
+    if (i18n.language) {
+      const activeLang = i18n.language.startsWith("hi") ? "hi" : i18n.language.startsWith("mr") ? "mr" : "en";
+      setLanguage(activeLang);
+    }
+  }, [i18n.language]);
+
+  const handleLanguageChange = (lang) => {
+    setLanguage(lang);
+    i18n.changeLanguage(lang);
+  };
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -393,7 +409,7 @@ const PriceTrendsPage = () => {
             <div className="flex items-center bg-white border border-slate-300 rounded-lg p-1 shadow-sm">
               <button
                 type="button"
-                onClick={() => setLanguage("en")}
+                onClick={() => handleLanguageChange("en")}
                 className={`px-2.5 py-1 text-xs font-semibold rounded ${
                   language === "en"
                     ? "bg-emerald-600 text-white"
@@ -404,7 +420,7 @@ const PriceTrendsPage = () => {
               </button>
               <button
                 type="button"
-                onClick={() => setLanguage("hi")}
+                onClick={() => handleLanguageChange("hi")}
                 className={`px-2.5 py-1 text-xs font-semibold rounded ${
                   language === "hi"
                     ? "bg-emerald-600 text-white"
@@ -415,7 +431,7 @@ const PriceTrendsPage = () => {
               </button>
               <button
                 type="button"
-                onClick={() => setLanguage("mr")}
+                onClick={() => handleLanguageChange("mr")}
                 className={`px-2.5 py-1 text-xs font-semibold rounded ${
                   language === "mr"
                     ? "bg-emerald-600 text-white"

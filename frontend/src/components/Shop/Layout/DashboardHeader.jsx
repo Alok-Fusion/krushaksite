@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { CiMap } from "react-icons/ci";
+import LanguageSwitcher from "../../Layout/LanguageSwitcher";
 
 const DashboardHeader = () => {
   const { seller } = useSelector((state) => state.seller);
@@ -17,7 +18,8 @@ const DashboardHeader = () => {
         </Link>
       </div>
       <div className="flex items-center">
-        <div className="flex items-center mr-4">
+        <div className="flex items-center gap-2 mr-4">
+          <LanguageSwitcher />
           <Link to="/dashboard-products" className="800px:block hidden">
             <FiShoppingBag
               color="#008000"
