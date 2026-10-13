@@ -53,11 +53,29 @@ graph TD
 - **Domain-Guarded Assistant**: "Krushak Krishi Mitra" conversational chatbot restricted strictly to agriculture, soil health, fertilizer ratios (NPK/DAP/Urea), monsoon precautions, and Indian government schemes (PM-KISAN).
 - **Security & Safety**: 10MB file size cap, MIME-type verification, and strict rate limiting (`aiLimiter`).
 
-### 4. Real-Time Chat System
+### 4. Hindi & Marathi Voice Search
+- **Browser Web Speech API**: Integrated voice search directly into the marketplace search bar with microphone permissions handling and active listening animations.
+- **Trilingual Speech Recognition**: Dropdown selector supports Indian English (`en-IN`), Hindi (`hi-IN`), and Marathi (`mr-IN`). Unconditionally hides the microphone icon on unsupported browsers.
+- **Gemini Query Normalization**: `POST /api/ai/normalize-query` takes natural language voice inputs (e.g., *"मुझे ताजा प्याज चाहिए"* or *"गव्हाचे बियाणे"*) and prompts Gemini 1.5 Flash to extract the canonical English search term (`onion`, `wheat`).
+- **Resilient Fallback & Rate Limiting**: Capped at 200 characters, protected with `aiLimiter`, and automatically falls back to raw transcripts if Gemini is unreachable or unconfigured.
+
+### 5. Mandi Price Forecaster (ML Service)
+- **Time-Series Forecaster**: Standalone Python FastAPI microservice (`ml-service/`) projecting 7-day and 30-day commodity prices across 8 crops (*onion, tomato, potato, wheat, soybean, cotton, maize, tur*) and 6 Maharashtra APMCs (*Lasalgaon, Pune, Nashik, Nagpur, Kolhapur, Latur*).
+- **Pluggable Data Interface**: `data_source.py` toggles via `DATA_SOURCE=synthetic|live`. Current phase uses a 2-year calibrated synthetic generator modeling harvest dips, off-season lean spikes, supply shocks, and inverse arrival elasticity. The live branch is stubbed for future Agmarknet (`data.gov.in`) ingestion without requiring downstream changes.
+- **Feature Engineering & LightGBM**: Trained on lag features (1, 7, 14, 30 days), rolling means (7, 14, 30 days), and calendar variables on a strict time-based split (last 60 days holdout, never random).
+- **Evaluation vs. Baselines (Synthetic Data)**:
+  - *LightGBM*: **MAE = ₹66.01 / quintal**, **MAPE = 1.86%**
+  - *Naive Baseline ($y_{t-1}$)*: **MAE = ₹53.35 / quintal**, **MAPE = 1.50%**
+  - *7-Day Moving Average*: **MAE = ₹99.93 / quintal**, **MAPE = 2.90%**
+  > **Note**: These numbers are evaluated strictly on synthetic simulation data and do not reflect real-world market accuracy. On single-step predictions, the naive baseline remains hard to beat in random-walk conditions, but LightGBM provides the autoregressive structure needed for 7-day and 30-day forward projections.
+- **Frontend Dashboard**: Interactive Chart.js visualization with 90-day price history, forward projections, 95% shaded error margins, plain-language harvest marketing advice, demo data labeling, and trilingual labels (English, Hindi, Marathi).
+- **Caching & Proxy**: Express backend proxies `GET /api/ai/forecast` with 5-minute in-memory caching and rate limiting.
+
+### 6. Real-Time Chat System
 - Socket.io room architecture (`joinConversation` / `leaveConversation`) isolating communications per conversation ID.
 - Fallback user-to-user routing with live online indicators and typing timestamps.
 
-### 5. Production Security & Financial Integrity
+### 7. Production Security & Financial Integrity
 - **HTTP Hardening**: Helmet security headers, CORS origin whitelisting, and layered IP rate limiting (strictest on authentication and checkout).
 - **Input Validation**: Schema validation using Zod on user, shop, product, order, and payment endpoints.
 - **Role-Based Access Control**: Multi-role middleware partitioning user, seller, and admin permissions.
@@ -65,34 +83,29 @@ graph TD
 
 ---
 
-## AI Implementation Details
+## AI & ML Implementation Details
 
-The crop disease engine uses Google's `gemini-1.5-flash` model with schema enforcement:
-
-```javascript
-// backend/controller/ai.js
-const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
-  generationConfig: {
-    responseMimeType: "application/json",
-    temperature: 0.2,
-  },
-});
+### Voice Query Normalization
+Calls Gemini 1.5 Flash with JSON schema enforcement:
+```json
+{ "keyword": "onion" }
 ```
 
-The output payload is validated before client delivery:
-
+### Mandi Forecaster ML Metrics (from `metrics.json`)
 ```json
 {
-  "crop": "Tomato",
-  "disease": "Early Blight (Alternaria solani)",
-  "confidence": "94%",
-  "severity": "Moderate",
-  "causes": ["Alternaria solani fungal spores", "High humidity and overhead irrigation"],
-  "treatment": ["Apply copper-based fungicide at 2.5g/L water", "Prune diseased lower foliage"],
-  "prevention": ["Adopt drip irrigation", "2-year crop rotation with non-solanaceous crops"]
+  "data_source": "synthetic",
+  "split_strategy": "Time-based holdout (last 60 days)",
+  "overall": {
+    "lightgbm": { "mae": 66.01, "rmse": 135.37, "mape": 1.86 },
+    "naive_last_value": { "mae": 53.35, "rmse": 120.54, "mape": 1.50 },
+    "moving_average_7d": { "mae": 99.93, "rmse": 191.62, "mape": 2.90 },
+    "beats_naive_baseline": false,
+    "beats_ma7_baseline": true
+  }
 }
 ```
+
 
 ---
 
@@ -135,6 +148,8 @@ Fill in required keys:
 | `CLOUDINARY_API_KEY` | Cloudinary API key | `1234567890` |
 | `CLOUDINARY_API_SECRET` | Cloudinary secret | `...` |
 | `GEMINI_API_KEY` | Google AI Studio Gemini API key | `AIzaSy...` |
+| `ML_SERVICE_URL` | Mandi Forecaster service URL | `http://localhost:8001` |
+| `DATA_SOURCE` | Price data source (`synthetic` or `live`) | `synthetic` |
 | `FRONTEND_URL` | Client origin | `http://localhost:3000` |
 | `ALLOWED_ORIGINS` | Permitted CORS origins (comma-separated)| `http://localhost:3000,http://localhost:3001` |
 
@@ -144,13 +159,23 @@ docker compose up --build
 ```
 This boots up:
 - MongoDB at `localhost:27017`
+- ML Forecaster Service at `localhost:8001`
 - Backend API at `localhost:8000`
 - Socket Server at `localhost:4000`
 - Frontend at `localhost:3000`
 
 ### 4. Run Manually
 
-**Backend:**
+**ML Service (Python 3.11):**
+```bash
+cd ml-service
+pip install -r requirements.txt
+python scripts/generate_synthetic.py
+python train.py
+uvicorn main:app --host 0.0.0.0 --port 8001
+```
+
+**Backend (Node/Express):**
 ```bash
 cd backend
 npm install
@@ -164,7 +189,7 @@ npm install
 node index.js
 ```
 
-**Frontend:**
+**Frontend (React):**
 ```bash
 cd frontend
 npm install
@@ -175,22 +200,40 @@ npm start
 
 ## Testing & CI
 
-The backend test suite is built with Jest and Supertest, covering auth, query filtering, pagination, order creation, Stripe webhooks, and AI image validation:
-
+### Backend Unit & Integration Tests (Jest + Supertest)
 ```bash
 cd backend
 npm test
 ```
+Covers authentication, order handling, Stripe webhooks, Gemini voice query normalization (`/api/ai/normalize-query`), and ML forecast proxy caching and validation (`/api/ai/forecast`).
+
+### ML Forecaster Tests (pytest)
+```bash
+cd ml-service
+pytest
+```
+Covers synthetic dataset generator schema, seed reproducibility, feature engineering lags and rolling windows, and FastAPI forecast endpoints.
 
 GitHub Actions automatically runs the test suite on every pull request and push to `main`:
 See workflow configuration in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ---
 
-## Deployment
+## Deployment Guide
 
 - **Frontend (Vercel)**: Configured with [`frontend/vercel.json`](frontend/vercel.json) to handle single-page routing without 404s.
-- **Backend (Render / Railway)**: Configured with [`render.yaml`](render.yaml) and [`railway.json`](railway.json).
+- **Backend (Render / Railway)**: Configured with [`render.yaml`](render.yaml) and [`railway.json`](railway.json). Set `ML_SERVICE_URL` to point to the deployed ML service.
+- **ML Service Deployment**:
+  - **Render (Docker / Web Service)**:
+    1. Create a new Web Service from the repository with Root Directory set to `ml-service`.
+    2. Choose **Docker** runtime (it uses `ml-service/Dockerfile`).
+    3. Set environment variable `DATA_SOURCE=synthetic` (or `live` once Agmarknet credentials are configured).
+    4. Provide the public Render URL (`https://<ml-service-name>.onrender.com`) to the backend's `ML_SERVICE_URL` variable.
+  - **Hugging Face Spaces (Docker / FastAPI)**:
+    1. Create a new Space with the **Docker** SDK.
+    2. Set `ml-service/` as repository root or link the repo.
+    3. Expose port `8001` or set `PORT=7860` for Hugging Face standard port binding.
+    4. Copy the direct Space URL into the Express backend's `ML_SERVICE_URL`.
 - **Database**: MongoDB Atlas M0/M10 cluster with IP access list and user role authentication.
 
 ---

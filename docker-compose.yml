@@ -26,10 +26,25 @@ services:
       - NODE_ENV=production
       - FRONTEND_URL=http://localhost:3000
       - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:80
+      - ML_SERVICE_URL=http://ml-service:8001
     env_file:
       - ./backend/config/.env
     depends_on:
       - mongodb
+      - ml-service
+    networks:
+      - krushak-network
+
+  ml-service:
+    build:
+      context: ./ml-service
+      dockerfile: Dockerfile
+    container_name: krushak-ml-service
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      - DATA_SOURCE=synthetic
     networks:
       - krushak-network
 
