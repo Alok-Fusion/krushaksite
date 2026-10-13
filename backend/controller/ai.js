@@ -403,7 +403,8 @@ router.get(
       });
     }
 
-    const mlServiceUrl = process.env.ML_SERVICE_URL || "http://localhost:8001";
+    const rawUrl = process.env.ML_SERVICE_URL || "http://127.0.0.1:8001";
+    const mlServiceUrl = rawUrl.replace("://localhost:", "://127.0.0.1:");
     const targetUrl = `${mlServiceUrl}/forecast?crop=${encodeURIComponent(crop)}&market=${encodeURIComponent(market)}&days=${days}`;
 
     try {
@@ -433,7 +434,7 @@ router.get(
     } catch (err) {
       return next(
         new ErrorHandler(
-          `Unable to reach Mandi Forecaster ML service: ${err.message}`,
+          `Unable to reach Mandi Forecaster ML service: ${err.message}. Please start the ML service with: cd ml-service && uvicorn main:app --port 8001`,
           503
         )
       );

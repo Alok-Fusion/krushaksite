@@ -531,15 +531,19 @@ const PriceTrendsPage = () => {
 
         {/* Error State */}
         {!loading && error && (
-          <div className="my-8 p-6 bg-red-50 border border-red-200 rounded-xl text-center">
+          <div className="my-8 p-6 bg-red-50 border border-red-200 rounded-xl text-center max-w-xl mx-auto shadow-sm">
             <h3 className="text-base font-bold text-red-800 mb-1">
               {t.errorHeading}
             </h3>
-            <p className="text-sm text-red-600 mb-4">{error}</p>
+            <p className="text-sm text-red-700 mb-3">{error}</p>
+            <div className="bg-slate-900 text-slate-100 p-3 rounded-lg text-xs font-mono text-left mb-4 overflow-x-auto">
+              <span className="text-slate-400"># Start ML Forecaster Service:</span><br />
+              cd ml-service &amp;&amp; python -m uvicorn main:app --port 8001
+            </div>
             <button
               type="button"
               onClick={fetchForecast}
-              className="px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition"
+              className="px-5 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition shadow-sm"
             >
               {t.retryBtn}
             </button>
