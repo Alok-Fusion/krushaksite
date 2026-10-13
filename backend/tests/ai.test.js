@@ -38,4 +38,38 @@ describe("AI Crop Disease & Assistant Routes Tests", () => {
       expect(res.body.message).toContain("question");
     });
   });
+
+  describe("POST /api/ai/normalize-query & /api/v2/ai/normalize-query", () => {
+    it("should reject missing transcript", async () => {
+      const res = await request(app)
+        .post("/api/ai/normalize-query")
+        .send({});
+
+      expect(res.status).toBe(400);
+      expect(res.body.success).toBe(false);
+      expect(res.body.message).toContain("Transcript");
+    });
+
+    it("should reject transcript exceeding 200 characters", async () => {
+      const longText = "a".repeat(201);
+      const res = await request(app)
+        .post("/api/ai/normalize-query")
+        .send({ transcript: longText });
+
+      expect(res.status).toBe(400);
+      expect(res.body.success).toBe(false);
+      expect(res.body.message).toContain("200 characters");
+    });
+
+    it("should fallback to raw transcript when API key is missing or calls fallback", async () => {
+      const res = await request(app)
+        .post("/api/ai/normalize-query")
+        .send({ transcript: "कांदा", language: "mr-IN" });
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.keyword).toBeDefined();
+    });
+  });
 });
+

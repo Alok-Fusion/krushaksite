@@ -17,6 +17,21 @@ const diseaseResultSchema = z.object({
   prevention: z.array(z.string()).default([]),
 });
 
+
+// Schema to validate voice query normalization input
+const normalizeQuerySchema = z.object({
+  transcript: z
+    .string({ message: "Transcript is required" })
+    .trim()
+    .min(1, "Transcript cannot be empty")
+    .max(200, "Transcript must not exceed 200 characters"),
+  language: z.string().optional().default("en-IN"),
+});
+
+const normalizeResultSchema = z.object({
+  keyword: z.string().min(1),
+});
+
 // Helper to extract clean base64 data and mime type
 function parseImageData(dataUrlOrBase64) {
   let mimeType = "image/jpeg";
@@ -227,6 +242,97 @@ Always respond in ${targetLang}. Keep your tone supportive, practical, and clear
           500
         )
       );
+    }
+  })
+);
+
+
+// POST /api/v2/ai/normalize-query - Normalize voice search query to English keyword
+router.post(
+  "/normalize-query",
+  aiLimiter,
+  catchAsyncErrors(async (req, res, next) => {
+    const parseResult = normalizeQuerySchema.safeParse(req.body);
+    if (!parseResult.success) {
+      return next(
+        new ErrorHandler(
+          parseResult.error.issues[0]?.message || "Invalid query data",
+          400
+        )
+      );
+    }
+
+    const { transcript, language } = parseResult.data;
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    // Fall back to raw transcript if no API key configured
+    if (!apiKey) {
+      return res.status(200).json({
+        success: true,
+        keyword: transcript,
+        fallback: true,
+      });
+    }
+
+    const langMap = {
+      "hi-IN": "Hindi",
+      "hi": "Hindi",
+      "mr-IN": "Marathi",
+      "mr": "Marathi",
+      "en-IN": "Indian English",
+      "en": "English",
+    };
+    const langDesc = langMap[language] || "Hindi/Marathi/English";
+
+    try {
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({
+        model: "gemini-1.5-flash",
+        generationConfig: {
+          temperature: 0.1,
+          responseMimeType: "application/json",
+        },
+      });
+
+      const prompt = `You are a query normalizer for an Indian agriculture marketplace (Krushak).
+A user spoke this search query in ${langDesc}:
+"${transcript}"
+
+Extract ONLY the primary crop, product, seed, fertilizer, or agricultural search term in clean lowercase English.
+Examples:
+- "मुझे ताजा प्याज चाहिए" -> {"keyword": "onion"}
+- "कांदा दर काय आहे" -> {"keyword": "onion"}
+- "गव्हाचे बियाणे" -> {"keyword": "wheat"}
+- "युरिया खत उपलब्ध आहे का" -> {"keyword": "urea"}
+- "tamatar" -> {"keyword": "tomato"}
+- "tractor" -> {"keyword": "tractor"}
+
+Return JSON object: {"keyword": "<english crop or product name>"}`;
+
+      const result = await model.generateContent(prompt);
+      const responseText = result.response.text();
+      const parsedJson = JSON.parse(responseText);
+      const validated = normalizeResultSchema.safeParse(parsedJson);
+
+      if (validated.success && validated.data.keyword) {
+        return res.status(200).json({
+          success: true,
+          keyword: validated.data.keyword.trim().toLowerCase(),
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        keyword: transcript,
+        fallback: true,
+      });
+    } catch (error) {
+      console.warn("Gemini normalize-query error, falling back to raw transcript:", error.message);
+      return res.status(200).json({
+        success: true,
+        keyword: transcript,
+        fallback: true,
+      });
     }
   })
 );
