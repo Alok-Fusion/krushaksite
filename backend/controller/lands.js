@@ -205,4 +205,39 @@ router.get(
   })
 );
 
+// admin delete land
+router.delete(
+  "/admin-delete-land/:id",
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const landsId = req.params.id;
+      const land = await Lands.findById(landsId);
+
+      if (!land) {
+        return next(new ErrorHandler("Land listing not found with this id", 404));
+      }
+
+      if (land.images && land.images.length > 0) {
+        for (let i = 0; i < land.images.length; i++) {
+          const publicId = land.images[i]?.public_id;
+          if (publicId && !publicId.startsWith("land_")) {
+            await cloudinary.v2.uploader.destroy(publicId);
+          }
+        }
+      }
+
+      await Lands.findByIdAndDelete(landsId);
+
+      res.status(200).json({
+        success: true,
+        message: "Land deleted successfully",
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
 module.exports = router;
