@@ -17,7 +17,8 @@ export const loadUser = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "LoadUserFail",
-      payload: error.response.data.message,
+      payload:
+        error.response?.data?.message || error.message || "Failed to load user",
     });
   }
 };
@@ -38,7 +39,8 @@ export const loadSeller = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "LoadSellerFail",
-      payload: error.response.data.message,
+      payload:
+        error.response?.data?.message || error.message || "Failed to load seller",
     });
   }
 };
@@ -74,7 +76,8 @@ export const updateUserInformation =
     } catch (error) {
       dispatch({
         type: "updateUserInfoFailed",
-        payload: error.response.data.message,
+        payload:
+          error.response?.data?.message || error.message || "Failed to update info",
       });
     }
   };
@@ -111,7 +114,8 @@ export const updatUserAddress =
     } catch (error) {
       dispatch({
         type: "updateUserAddressFailed",
-        payload: error.response.data.message,
+        payload:
+          error.response?.data?.message || error.message || "Failed to update address",
       });
     }
   };
@@ -138,7 +142,8 @@ export const deleteUserAddress = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "deleteUserAddressFailed",
-      payload: error.response.data.message,
+      payload:
+        error.response?.data?.message || error.message || "Failed to delete address",
     });
   }
 };
@@ -161,7 +166,8 @@ export const getAllUsers = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "getAllUsersFailed",
-      payload: error.response.data.message,
+      payload:
+        error.response?.data?.message || error.message || "Failed to load users",
     });
   }
 };

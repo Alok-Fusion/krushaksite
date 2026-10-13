@@ -50,6 +50,7 @@ export const createLand =
 
 // get All lands of the seller
 export const getAllLandsShop = (id) => async (dispatch) => {
+  if (!id) return;
   try {
     dispatch({
       type: "getAllLandsShopRequest",

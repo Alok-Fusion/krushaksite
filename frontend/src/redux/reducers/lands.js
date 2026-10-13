@@ -1,13 +1,17 @@
 import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
-  isLoading: true,
+  isLoading: false,
   allLands: [],
+  lands: [],
   pagination: {
     totalLands: 0,
     totalPages: 1,
     currentPage: 1,
   },
+  error: null,
+  success: false,
+  message: null,
 };
 
 export const landsReducer = createReducer(initialState, {

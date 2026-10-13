@@ -15,16 +15,20 @@ const ShopInfo = ({ isOwner }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllProductsShop(id));
-    setIsLoading(true);
-    axios.get(`${server}/shop/get-shop-info/${id}`).then((res) => {
-     setData(res.data.shop);
-     setIsLoading(false);
-    }).catch((error) => {
-      console.log(error);
-      setIsLoading(false);
-    })
-  }, [])
+    if (id) {
+      dispatch(getAllProductsShop(id));
+      setIsLoading(true);
+      axios
+        .get(`${server}/shop/get-shop-info/${id}`)
+        .then((res) => {
+          setData(res.data.shop || {});
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          setIsLoading(false);
+        });
+    }
+  }, [dispatch, id]);
   
 
   const logoutHandler = async () => {

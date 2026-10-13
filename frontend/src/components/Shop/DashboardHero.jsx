@@ -19,11 +19,13 @@ const DashboardHero = () => {
   const { products } = useSelector((state) => state.products);
 
   useEffect(() => {
-     dispatch(getAllOrdersOfShop(seller._id));
-     dispatch(getAllProductsShop(seller._id));
-  }, [dispatch]);
+    if (seller?._id) {
+      dispatch(getAllOrdersOfShop(seller._id));
+      dispatch(getAllProductsShop(seller._id));
+    }
+  }, [dispatch, seller?._id]);
 
-  const availableBalance = seller?.availableBalance.toFixed(2);
+  const availableBalance = (seller?.availableBalance || 0).toFixed(2);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },

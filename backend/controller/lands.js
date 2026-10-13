@@ -85,6 +85,26 @@ router.get(
   })
 );
 
+
+// get single land by id
+router.get(
+  "/get-land/:id",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const land = await Lands.findById(req.params.id);
+      if (!land) {
+        return next(new ErrorHandler("Land listing not found with this id", 404));
+      }
+      res.status(200).json({
+        success: true,
+        land,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  })
+);
+
 // delete the land of seller
 router.delete(
   "/delete-seller-land/:id",

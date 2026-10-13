@@ -2,6 +2,12 @@ import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
   isAuthenticated: false,
+  loading: false,
+  user: null,
+  users: [],
+  usersLoading: false,
+  error: null,
+  successMessage: null,
 };
 
 export const userReducer = createReducer(initialState, {
@@ -17,6 +23,7 @@ export const userReducer = createReducer(initialState, {
     state.loading = false;
     state.error = action.payload;
     state.isAuthenticated = false;
+    state.user = null;
   },
 
   // update user information
@@ -64,11 +71,11 @@ export const userReducer = createReducer(initialState, {
   getAllUsersRequest: (state) => {
     state.usersLoading = true;
   },
-  getAllUsersSuccess: (state,action) => {
+  getAllUsersSuccess: (state, action) => {
     state.usersLoading = false;
     state.users = action.payload;
   },
-  getAllUsersFailed: (state,action) => {
+  getAllUsersFailed: (state, action) => {
     state.usersLoading = false;
     state.error = action.payload;
   },

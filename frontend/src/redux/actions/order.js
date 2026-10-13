@@ -3,6 +3,7 @@ import { server } from "../../server";
 
 // get all orders of user
 export const getAllOrdersOfUser = (userId) => async (dispatch) => {
+  if (!userId) return;
   try {
     dispatch({
       type: "getAllOrdersUserRequest",
@@ -19,13 +20,15 @@ export const getAllOrdersOfUser = (userId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "getAllOrdersUserFailed",
-      payload: error.response.data.message,
+      payload:
+        error.response?.data?.message || error.message || "Failed to load user orders",
     });
   }
 };
 
 // get all orders of seller
 export const getAllOrdersOfShop = (shopId) => async (dispatch) => {
+  if (!shopId) return;
   try {
     dispatch({
       type: "getAllOrdersShopRequest",
@@ -42,7 +45,8 @@ export const getAllOrdersOfShop = (shopId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "getAllOrdersShopFailed",
-      payload: error.response.data.message,
+      payload:
+        error.response?.data?.message || error.message || "Failed to load shop orders",
     });
   }
 };
@@ -65,7 +69,8 @@ export const getAllOrdersOfAdmin = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "adminAllOrdersFailed",
-      payload: error.response.data.message,
+      payload:
+        error.response?.data?.message || error.message || "Failed to load admin orders",
     });
   }
 };

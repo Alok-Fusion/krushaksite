@@ -30,13 +30,15 @@ const ProductDetails = ({ data }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAllProductsShop(data && data?.shop._id));
+    if (data?.shop?._id) {
+      dispatch(getAllProductsShop(data.shop._id));
+    }
     if (wishlist && wishlist.find((i) => i._id === data?._id)) {
       setClick(true);
     } else {
       setClick(false);
     }
-  }, [data, wishlist]);
+  }, [data, wishlist, dispatch]);
 
   const incrementCount = () => {
     setCount(count + 50);

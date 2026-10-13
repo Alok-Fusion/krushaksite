@@ -14,8 +14,10 @@ const AllLands = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllLandsShop(seller._id));
-  },[dispatch]);
+    if (seller?._id) {
+      dispatch(getAllLandsShop(seller._id));
+    }
+  }, [dispatch, seller?._id]);
 
   const handleDelete = (id) => {
     dispatch(deleteLands(id));

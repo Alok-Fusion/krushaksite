@@ -19,7 +19,8 @@ export const getAllSellers = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "getAllSellerFailed",
-    //   payload: error.response.data.message,
+      payload:
+        error.response?.data?.message || error.message || "Failed to load sellers",
     });
   }
 };

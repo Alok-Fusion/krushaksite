@@ -90,6 +90,26 @@ router.get(
   })
 );
 
+
+// get single product by id
+router.get(
+  "/get-product/:id",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const product = await Product.findById(req.params.id);
+      if (!product) {
+        return next(new ErrorHandler("Product not found with this id", 404));
+      }
+      res.status(200).json({
+        success: true,
+        product,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  })
+);
+
 // delete product of a shop
 router.delete(
   "/delete-shop-product/:id",

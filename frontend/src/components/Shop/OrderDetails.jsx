@@ -18,8 +18,10 @@ const OrderDetails = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    dispatch(getAllOrdersOfShop(seller._id));
-  }, [dispatch]);
+    if (seller?._id) {
+      dispatch(getAllOrdersOfShop(seller._id));
+    }
+  }, [dispatch, seller?._id]);
 
   const data = orders && orders.find((item) => item._id === id);
 

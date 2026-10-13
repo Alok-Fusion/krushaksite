@@ -22,13 +22,15 @@ const LandsDetail = ({ data }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllLandsShop(data && data?.shop._id));
+    if (data?.shop?._id) {
+      dispatch(getAllLandsShop(data.shop._id));
+    }
     if (wishlist && wishlist.find((i) => i._id === data?._id)) {
       setSelect(true);
     } else {
       setSelect(false);
     }
-  }, [data, wishlist]);
+  }, [data, wishlist, dispatch]);
   const removeFromWishlistHandler = (data) => {
     setClick(!click);
     dispatch(removeFromWishlist(data));

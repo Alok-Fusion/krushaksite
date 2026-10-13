@@ -47,6 +47,7 @@ export const createProduct =
 
 // get All Products of a shop
 export const getAllProductsShop = (id) => async (dispatch) => {
+  if (!id) return;
   try {
     dispatch({
       type: "getAllProductsShopRequest",

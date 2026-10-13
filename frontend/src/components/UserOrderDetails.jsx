@@ -22,8 +22,10 @@ const UserOrderDetails = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    dispatch(getAllOrdersOfUser(user._id));
-  }, [dispatch,user._id]);
+    if (user?._id) {
+      dispatch(getAllOrdersOfUser(user._id));
+    }
+  }, [dispatch, user?._id]);
 
   const data = orders && orders.find((item) => item._id === id);
 
@@ -42,13 +44,13 @@ const UserOrderDetails = () => {
       )
       .then((res) => {
         toast.success(res.data.message);
-        dispatch(getAllOrdersOfUser(user._id));
+        if (user?._id) dispatch(getAllOrdersOfUser(user._id));
         setComment("");
         setRating(null);
         setOpen(false);
       })
       .catch((error) => {
-        toast.error(error);
+        toast.error(error.response?.data?.message || error.message || "Failed to submit review");
       });
   };
   
@@ -57,9 +59,9 @@ const UserOrderDetails = () => {
       status: "Processing refund"
     }).then((res) => {
        toast.success(res.data.message);
-    dispatch(getAllOrdersOfUser(user._id));
+    if (user?._id) dispatch(getAllOrdersOfUser(user._id));
     }).catch((error) => {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || error.message || "Failed to request refund");
     })
   };
 

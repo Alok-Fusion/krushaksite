@@ -1,7 +1,11 @@
 import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
-  isLoading: true,
+  isLoading: false,
+  isSeller: false,
+  seller: null,
+  sellers: [],
+  error: null,
 };
 
 export const sellerReducer = createReducer(initialState, {
@@ -17,6 +21,7 @@ export const sellerReducer = createReducer(initialState, {
     state.isLoading = false;
     state.error = action.payload;
     state.isSeller = false;
+    state.seller = null;
   },
 
   // get all sellers ---admin

@@ -1,7 +1,11 @@
 import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
-  isLoading: true,
+  isLoading: false,
+  adminOrderLoading: false,
+  orders: [],
+  adminOrders: [],
+  error: null,
 };
 
 export const orderReducer = createReducer(initialState, {
@@ -11,20 +15,20 @@ export const orderReducer = createReducer(initialState, {
   },
   getAllOrdersUserSuccess: (state, action) => {
     state.isLoading = false;
-    state.orders = action.payload;
+    state.orders = action.payload || [];
   },
   getAllOrdersUserFailed: (state, action) => {
     state.isLoading = false;
     state.error = action.payload;
   },
-  
+
   // get all orders of shop
   getAllOrdersShopRequest: (state) => {
     state.isLoading = true;
   },
   getAllOrdersShopSuccess: (state, action) => {
     state.isLoading = false;
-    state.orders = action.payload;
+    state.orders = action.payload || [];
   },
   getAllOrdersShopFailed: (state, action) => {
     state.isLoading = false;
@@ -37,7 +41,7 @@ export const orderReducer = createReducer(initialState, {
   },
   adminAllOrdersSuccess: (state, action) => {
     state.adminOrderLoading = false;
-    state.adminOrders = action.payload;
+    state.adminOrders = action.payload || [];
   },
   adminAllOrdersFailed: (state, action) => {
     state.adminOrderLoading = false;
