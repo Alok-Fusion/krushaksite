@@ -6,7 +6,9 @@ import {
   AiOutlineHeart,
   AiOutlineSearch,
   AiOutlineShoppingCart,
+  AiOutlineLoading3Quarters,
 } from "react-icons/ai";
+import { BsMic, BsMicFill } from "react-icons/bs";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
@@ -17,6 +19,9 @@ import Cart from "../cart/Cart";
 import Wishlist from "../Wishlist/Wishlist";
 import { RxCross1 } from "react-icons/rx";
 import img1 from "../../Assests/Logo/a.jpeg";
+import axios from "axios";
+import { server } from "../../server";
+import { toast } from "react-toastify";
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -32,16 +37,109 @@ const Header = ({ activeHeading }) => {
   const [openWishlist, setOpenWishlist] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const handleSearchChange = (e) => {
-    const term = e.target.value;
-    setSearchTerm(term);
+  // Voice Search states
+  const [voiceLang, setVoiceLang] = useState("hi-IN");
+  const [isListening, setIsListening] = useState(false);
+  const [isNormalizing, setIsNormalizing] = useState(false);
 
+  // Web Speech API availability check
+  const SpeechRecognition =
+    typeof window !== "undefined"
+      ? window.SpeechRecognition || window.webkitSpeechRecognition
+      : null;
+  const isSpeechSupported = !!SpeechRecognition;
+
+  const filterAndSetResults = (term) => {
+    setSearchTerm(term);
+    if (!term || !term.trim()) {
+      setSearchData(null);
+      return;
+    }
+    const clean = term.trim().toLowerCase();
     const filteredProducts =
       allProducts &&
-      allProducts.filter((product) =>
-        product.name.toLowerCase().includes(term.toLowerCase())
+      allProducts.filter(
+        (product) =>
+          product.name?.toLowerCase().includes(clean) ||
+          product.category?.toLowerCase().includes(clean) ||
+          product.description?.toLowerCase().includes(clean)
       );
     setSearchData(filteredProducts);
+  };
+
+  const handleSearchChange = (e) => {
+    filterAndSetResults(e.target.value);
+  };
+
+  const handleNormalizeAndSearch = async (transcriptText) => {
+    if (!transcriptText || !transcriptText.trim()) return;
+    setIsNormalizing(true);
+    try {
+      const { data } = await axios.post(`${server}/ai/normalize-query`, {
+        transcript: transcriptText.trim(),
+        language: voiceLang,
+      });
+      const resolvedKeyword = (data?.keyword && data.keyword.trim()) || transcriptText.trim();
+      filterAndSetResults(resolvedKeyword);
+      toast.success(`Voice query: "${resolvedKeyword}"`);
+    } catch (err) {
+      console.warn("Normalize voice query fallback:", err);
+      filterAndSetResults(transcriptText.trim());
+    } finally {
+      setIsNormalizing(false);
+    }
+  };
+
+  const toggleListening = () => {
+    if (!SpeechRecognition) {
+      toast.error("Speech recognition is not supported in this browser.");
+      return;
+    }
+
+    if (isListening) {
+      setIsListening(false);
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = voiceLang;
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognition.onresult = (event) => {
+        setIsListening(false);
+        const transcript = event.results[0][0].transcript;
+        if (transcript) {
+          handleNormalizeAndSearch(transcript);
+        }
+      };
+
+      recognition.onerror = (event) => {
+        setIsListening(false);
+        if (event.error === "not-allowed") {
+          toast.error("Microphone access denied. Please grant microphone permissions.");
+        } else if (event.error === "no-speech") {
+          toast.info("No speech detected. Please speak clearly into the mic.");
+        } else {
+          toast.error(`Speech recognition error: ${event.error}`);
+        }
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognition.start();
+    } catch (err) {
+      setIsListening(false);
+      toast.error("Failed to start voice recognition: " + err.message);
+    }
   };
 
   window.addEventListener("scroll", () => {
@@ -63,34 +161,95 @@ const Header = ({ activeHeading }) => {
           </div>
           {/* search box */}
           <div className="w-[50%] relative">
-            <input
-              type="text"
-              placeholder="Search Product..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="h-[40px] w-full px-2 border-[#0ea5e9] border-[2px] rounded-md"
-            />
-            <AiOutlineSearch 
-              size={30}
-              className="absolute right-2 top-1.5 cursor-pointer"
-            />
+            <div className="flex items-center w-full h-[40px] px-2 border-[#0ea5e9] border-[2px] rounded-md bg-white focus-within:ring-2 focus-within:ring-[#0ea5e9]/30">
+              <input
+                type="text"
+                placeholder="Search Product or crop..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="h-full flex-1 px-1 text-sm outline-none bg-transparent"
+              />
+
+              {/* Language Selector */}
+              <select
+                value={voiceLang}
+                onChange={(e) => setVoiceLang(e.target.value)}
+                title="Voice search language"
+                className="text-xs bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded px-1.5 py-1 text-slate-700 font-medium cursor-pointer outline-none mr-1.5"
+              >
+                <option value="en-IN">EN</option>
+                <option value="hi-IN">हिंदी</option>
+                <option value="mr-IN">मराठी</option>
+              </select>
+
+              {/* Mic Button (hidden if Web Speech API unsupported) */}
+              {isSpeechSupported && (
+                <button
+                  type="button"
+                  onClick={toggleListening}
+                  title={
+                    isListening
+                      ? "Listening... click to stop"
+                      : "Voice search in English, Hindi, or Marathi"
+                  }
+                  className={`p-1 rounded-full transition flex items-center justify-center mr-1 ${
+                    isListening
+                      ? "bg-red-500 text-white animate-pulse"
+                      : isNormalizing
+                      ? "bg-amber-100 text-amber-600 cursor-wait"
+                      : "text-slate-600 hover:text-[#0ea5e9] hover:bg-slate-100"
+                  }`}
+                >
+                  {isNormalizing ? (
+                    <AiOutlineLoading3Quarters size={18} className="animate-spin" />
+                  ) : isListening ? (
+                    <BsMicFill size={18} />
+                  ) : (
+                    <BsMic size={18} />
+                  )}
+                </button>
+              )}
+
+              <AiOutlineSearch 
+                size={26}
+                className="text-[#0ea5e9] cursor-pointer"
+              />
+            </div>
+
+            {/* Listening / Normalizing Indicators */}
+            {isListening && (
+              <div className="absolute top-[44px] left-0 bg-red-600 text-white text-xs px-2.5 py-1 rounded shadow-md z-[12] flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+                Listening in {voiceLang === "hi-IN" ? "Hindi (हिंदी)" : voiceLang === "mr-IN" ? "Marathi (मराठी)" : "English"}...
+              </div>
+            )}
+
+            {isNormalizing && (
+              <div className="absolute top-[44px] left-0 bg-sky-600 text-white text-xs px-2.5 py-1 rounded shadow-md z-[12] flex items-center gap-1.5">
+                <AiOutlineLoading3Quarters size={12} className="animate-spin" />
+                Interpreting voice query with Gemini AI...
+              </div>
+            )}
+
             {searchData && searchData.length !== 0 ? (
-              <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
-                {searchData &&
-                  searchData.map((i, index) => {
-                    return (
-                      <Link to={`/product/${i._id}`}>
-                        <div className="w-full flex items-start-py-3">
-                          <img
-                            src={`${i.images[0]?.url}`}
-                            alt=""
-                            className="w-[40px] h-[40px] mr-[10px]"
-                          />
-                          <h1>{i.name}</h1>
+              <div className="absolute w-full min-h-[30vh] max-h-[60vh] overflow-y-auto bg-slate-50 shadow-md rounded-md z-[11] p-3 top-[44px] border border-slate-200">
+                {searchData.map((i, index) => {
+                  return (
+                    <Link to={`/product/${i._id}`} key={index}>
+                      <div className="w-full flex items-center py-2 px-2 hover:bg-slate-100 rounded transition border-b border-slate-100 last:border-b-0">
+                        <img
+                          src={i.images?.[0]?.url || i.image_Url?.[0]?.url || ""}
+                          alt=""
+                          className="w-[40px] h-[40px] object-cover rounded mr-[10px]"
+                        />
+                        <div>
+                          <h1 className="text-sm font-semibold text-slate-800">{i.name}</h1>
+                          <p className="text-xs text-slate-500">₹{i.discountPrice || i.originalPrice} &bull; {i.category}</p>
                         </div>
-                      </Link>
-                    );
-                  })}
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             ) : null}
           </div>
@@ -261,29 +420,63 @@ const Header = ({ activeHeading }) => {
                 />
               </div>
 
-              <div className="my-8 w-[92%] m-auto h-[40px relative]">
-                <input
-                  type="search"
-                  placeholder="Search Product..."
-                  className="h-[40px] w-full px-2 border-[#008000] border-[2px] rounded-md"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                />
-                {searchData && (
-                  <div className="absolute bg-[#fff] z-10 shadow w-full left-0 p-3">
-                    {searchData.map((i) => {
-                      const d = i.name;
+              <div className="my-6 w-[92%] m-auto relative">
+                <div className="flex items-center w-full h-[40px] px-2 border-[#008000] border-[2px] rounded-md bg-white">
+                  <input
+                    type="search"
+                    placeholder="Search Product..."
+                    className="h-full flex-1 px-1 text-sm outline-none"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                  />
 
-                      const Product_name = d.replace(/\s+/g, "-");
+                  {/* Language Selector */}
+                  <select
+                    value={voiceLang}
+                    onChange={(e) => setVoiceLang(e.target.value)}
+                    title="Voice search language"
+                    className="text-xs bg-slate-100 border border-slate-300 rounded px-1 py-0.5 text-slate-700 outline-none mr-1"
+                  >
+                    <option value="en-IN">EN</option>
+                    <option value="hi-IN">हिंदी</option>
+                    <option value="mr-IN">मराठी</option>
+                  </select>
+
+                  {/* Mic Button */}
+                  {isSpeechSupported && (
+                    <button
+                      type="button"
+                      onClick={toggleListening}
+                      className={`p-1 rounded-full ${
+                        isListening ? "bg-red-500 text-white animate-pulse" : "text-slate-600"
+                      }`}
+                    >
+                      {isListening ? <BsMicFill size={16} /> : <BsMic size={16} />}
+                    </button>
+                  )}
+                </div>
+
+                {isListening && (
+                  <div className="text-xs text-red-600 font-medium mt-1">
+                    Listening ({voiceLang})...
+                  </div>
+                )}
+
+                {searchData && (
+                  <div className="absolute bg-[#fff] z-10 shadow w-full left-0 p-3 mt-1 rounded-md max-h-[50vh] overflow-y-auto">
+                    {searchData.map((i, index) => {
                       return (
-                        <Link to={`/product/${Product_name}`}>
-                          <div className="flex items-center">
+                        <Link to={`/product/${i._id || i.name?.replace(/\s+/g, "-")}`} key={index}>
+                          <div className="flex items-center py-1.5 border-b border-slate-100">
                             <img
-                              src={i.image_Url[0]?.url}
+                              src={i.images?.[0]?.url || i.image_Url?.[0]?.url || ""}
                               alt=""
-                              className="w-[50px] mr-2"
+                              className="w-[40px] h-[40px] object-cover rounded mr-2"
                             />
-                            <h5>{i.name}</h5>
+                            <div>
+                              <h5 className="text-sm font-medium">{i.name}</h5>
+                              <p className="text-xs text-slate-500">₹{i.discountPrice || i.originalPrice}</p>
+                            </div>
                           </div>
                         </Link>
                       );
