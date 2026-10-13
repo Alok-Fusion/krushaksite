@@ -11,12 +11,15 @@ import { getAllLandsShop } from "../../../redux/actions/lands";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { server } from "../../../server";
+import TranslationBadge from "../../common/TranslationBadge";
+
 const LandsDetail = ({ data }) => {
   const { lands } = useSelector((state) => state.lands);
   const { user, isAuthenticated } = useSelector((state) => state.user);
   const { wishlist } = useSelector((state) => state.wishlist);
   const [select, setSelect] = useState(0);
   const [click, setClick] = useState(false);
+  const [showOriginal, setShowOriginal] = useState(false);
   const { products } = useSelector((state) => state.products);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -115,8 +118,20 @@ const LandsDetail = ({ data }) => {
                 </div>
               </div>
               <div className="w-full pt-5 800px:w-[50%]">
-                <h1 className={`${styles.landsTitle}`}>{data.name}</h1>
-                <p>{data.description}</p>
+                <h1 className={`${styles.landsTitle}`}>
+                  {showOriginal && data?.original?.name ? data.original.name : data?.name}
+                </h1>
+                <TranslationBadge
+                  isTranslated={data?.isTranslated}
+                  sourceLang={data?.translatedFrom || data?.sourceLang}
+                  onToggle={() => setShowOriginal(!showOriginal)}
+                  isOriginalShown={showOriginal}
+                />
+                <p>
+                  {showOriginal && data?.original?.description
+                    ? data.original.description
+                    : data?.description}
+                </p>
                 <div className="flex pt-3">
                   <h3 className={`${styles.landActualPrice}`}>₹{data.price}</h3>
 

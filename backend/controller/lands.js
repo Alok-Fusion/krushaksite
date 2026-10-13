@@ -6,6 +6,8 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const Shop = require("../model/shop");
 const Lands = require("../model/lands");
 const cloudinary = require("cloudinary");
+const { getRequestedLang, applyTranslations } = require("../utils/applyTranslations");
+const { enqueueTranslation } = require("../utils/translationQueue");
 
 // adding land --- only seller
 router.post(
@@ -56,6 +58,9 @@ router.post(
 
       const lands = await Lands.create(landData);
 
+      // Enqueue background translation
+      enqueueTranslation("lands", lands._id);
+
       res.status(201).json({
         success: true,
         lands,
@@ -75,9 +80,12 @@ router.get(
         createdAt: -1,
       });
 
+      const targetLang = getRequestedLang(req);
+      const translatedLands = applyTranslations(lands, targetLang, "lands");
+
       res.status(200).json({
         success: true,
-        lands,
+        lands: translatedLands,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 400));
@@ -95,9 +103,13 @@ router.get(
       if (!land) {
         return next(new ErrorHandler("Land listing not found with this id", 404));
       }
+
+      const targetLang = getRequestedLang(req);
+      const translatedLand = applyTranslations(land, targetLang, "lands");
+
       res.status(200).json({
         success: true,
-        land,
+        land: translatedLand,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 400));
@@ -164,6 +176,15 @@ router.get(
           { description: { $regex: search, $options: "i" } },
           { landlocation: { $regex: search, $options: "i" } },
           { address: { $regex: search, $options: "i" } },
+          { "translations.en.name": { $regex: search, $options: "i" } },
+          { "translations.en.description": { $regex: search, $options: "i" } },
+          { "translations.en.landlocation": { $regex: search, $options: "i" } },
+          { "translations.hi.name": { $regex: search, $options: "i" } },
+          { "translations.hi.description": { $regex: search, $options: "i" } },
+          { "translations.hi.landlocation": { $regex: search, $options: "i" } },
+          { "translations.mr.name": { $regex: search, $options: "i" } },
+          { "translations.mr.description": { $regex: search, $options: "i" } },
+          { "translations.mr.landlocation": { $regex: search, $options: "i" } },
         ];
       }
 
@@ -191,10 +212,12 @@ router.get(
       }
 
       const lands = await queryExec;
+      const targetLang = getRequestedLang(req);
+      const translatedLands = applyTranslations(lands, targetLang, "lands");
 
       res.status(200).json({
         success: true,
-        lands,
+        lands: translatedLands,
         totalLands,
         totalPages: limit > 0 ? Math.ceil(totalLands / limit) : 1,
         currentPage: page,
@@ -215,9 +238,13 @@ router.get(
       const lands = await Lands.find().sort({
         createdAt: -1,
       });
+
+      const targetLang = getRequestedLang(req);
+      const translatedLands = applyTranslations(lands, targetLang, "lands");
+
       res.status(200).json({
         success: true,
-        lands,
+        lands: translatedLands,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

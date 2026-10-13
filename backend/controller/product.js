@@ -9,6 +9,8 @@ const cloudinary = require("cloudinary");
 const ErrorHandler = require("../utils/ErrorHandler");
 const validate = require("../middleware/validate");
 const { createProductSchema } = require("../validations/schemas");
+const { getRequestedLang, applyTranslations } = require("../utils/applyTranslations");
+const { enqueueTranslation } = require("../utils/translationQueue");
 
 // create product --- only seller
 router.post(
@@ -61,6 +63,9 @@ router.post(
 
       const product = await Product.create(productData);
 
+      // Enqueue background translation for en, hi, mr
+      enqueueTranslation("product", product._id);
+
       res.status(201).json({
         success: true,
         product,
@@ -80,9 +85,12 @@ router.get(
         createdAt: -1,
       });
 
+      const targetLang = getRequestedLang(req);
+      const translatedProducts = applyTranslations(products, targetLang, "product");
+
       res.status(200).json({
         success: true,
-        products,
+        products: translatedProducts,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 400));
@@ -100,9 +108,13 @@ router.get(
       if (!product) {
         return next(new ErrorHandler("Product not found with this id", 404));
       }
+
+      const targetLang = getRequestedLang(req);
+      const translatedProduct = applyTranslations(product, targetLang, "product");
+
       res.status(200).json({
         success: true,
-        product,
+        product: translatedProduct,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 400));
@@ -171,6 +183,12 @@ router.get(
           { name: { $regex: search, $options: "i" } },
           { description: { $regex: search, $options: "i" } },
           { tags: { $regex: search, $options: "i" } },
+          { "translations.en.name": { $regex: search, $options: "i" } },
+          { "translations.en.description": { $regex: search, $options: "i" } },
+          { "translations.hi.name": { $regex: search, $options: "i" } },
+          { "translations.hi.description": { $regex: search, $options: "i" } },
+          { "translations.mr.name": { $regex: search, $options: "i" } },
+          { "translations.mr.description": { $regex: search, $options: "i" } },
         ];
       }
 
@@ -194,10 +212,12 @@ router.get(
       }
 
       const products = await queryExec;
+      const targetLang = getRequestedLang(req);
+      const translatedProducts = applyTranslations(products, targetLang, "product");
 
       res.status(200).json({
         success: true,
-        products,
+        products: translatedProducts,
         totalProducts,
         totalPages: limit > 0 ? Math.ceil(totalProducts / limit) : 1,
         currentPage: page,
@@ -258,6 +278,9 @@ router.put(
 
       await product.save({ validateBeforeSave: false });
 
+      // Enqueue background translation for new/updated review
+      enqueueTranslation("product", product._id);
+
       if (orderId) {
         await Order.findByIdAndUpdate(
           orderId,
@@ -286,9 +309,13 @@ router.get(
       const products = await Product.find().sort({
         createdAt: -1,
       });
+
+      const targetLang = getRequestedLang(req);
+      const translatedProducts = applyTranslations(products, targetLang, "product");
+
       res.status(200).json({
         success: true,
-        products,
+        products: translatedProducts,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

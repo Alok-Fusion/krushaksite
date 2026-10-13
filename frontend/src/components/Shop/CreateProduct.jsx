@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../redux/actions/product";
 import { categoriesData } from "../../static/data";
 import { toast } from "react-toastify";
+import TranslationsReviewSection from "./TranslationsReviewSection";
 
 const CreateProduct = () => {
   const { seller } = useSelector((state) => state.seller);
@@ -200,6 +201,13 @@ const CreateProduct = () => {
               ))}
           </div>
           <br />
+
+          <TranslationsReviewSection
+            model="product"
+            sourceName={name}
+            sourceDescription={description}
+          />
+
           <div>
             <input
               type="submit"

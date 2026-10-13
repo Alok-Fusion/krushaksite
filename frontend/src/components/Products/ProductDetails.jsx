@@ -18,8 +18,11 @@ import { addTocart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
 import Ratings from "./Ratings";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
+import TranslationBadge from "../common/TranslationBadge";
 
 const ProductDetails = ({ data }) => {
+  const { t } = useTranslation();
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.user);
@@ -27,6 +30,7 @@ const ProductDetails = ({ data }) => {
   const [count, setCount] = useState(50);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
+  const [showOriginal, setShowOriginal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -150,8 +154,20 @@ const ProductDetails = ({ data }) => {
                 </div>
               </div>
               <div className="w-full 800px:w-[50%] pt-5">
-                <h1 className={`${styles.productTitle}`}>{data.name}</h1>
-                <p>{data.description}</p>
+                <h1 className={`${styles.productTitle}`}>
+                  {showOriginal && data?.original?.name ? data.original.name : data?.name}
+                </h1>
+                <TranslationBadge
+                  isTranslated={data?.isTranslated}
+                  sourceLang={data?.translatedFrom || data?.sourceLang}
+                  onToggle={() => setShowOriginal(!showOriginal)}
+                  isOriginalShown={showOriginal}
+                />
+                <p>
+                  {showOriginal && data?.original?.description
+                    ? data.original.description
+                    : data?.description}
+                </p>
                 <div className="flex pt-3">
                   <h4 className={`${styles.productDiscountPrice}`}>
                     {data.discountPrice}₹/kg

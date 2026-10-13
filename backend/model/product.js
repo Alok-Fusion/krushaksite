@@ -50,10 +50,29 @@ const productSchema = new mongoose.Schema({
       productId: {
         type: String,
       },
-      createdAt:{
+      createdAt: {
         type: Date,
-        default: Date.now(),
-      }
+        default: Date.now,
+      },
+      translations: {
+        en: { type: Object, default: {} },
+        hi: { type: Object, default: {} },
+        mr: { type: Object, default: {} },
+      },
+      sourceLang: {
+        type: String,
+        enum: ["en", "hi", "mr"],
+        default: "en",
+      },
+      sourceHash: {
+        type: String,
+        default: "",
+      },
+      edited: {
+        en: { type: Boolean, default: false },
+        hi: { type: Boolean, default: false },
+        mr: { type: Boolean, default: false },
+      },
     },
   ],
   ratings: {
@@ -71,9 +90,28 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  translations: {
+    en: { type: Object, default: {} },
+    hi: { type: Object, default: {} },
+    mr: { type: Object, default: {} },
+  },
+  sourceLang: {
+    type: String,
+    enum: ["en", "hi", "mr"],
+    default: "en",
+  },
+  sourceHash: {
+    type: String,
+    default: "",
+  },
+  edited: {
+    en: { type: Boolean, default: false },
+    hi: { type: Boolean, default: false },
+    mr: { type: Boolean, default: false },
+  },
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
 });
 

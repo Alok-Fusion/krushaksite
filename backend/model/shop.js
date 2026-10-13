@@ -74,7 +74,26 @@ const shopSchema = new mongoose.Schema({
   ],
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
+  },
+  translations: {
+    en: { type: Object, default: {} },
+    hi: { type: Object, default: {} },
+    mr: { type: Object, default: {} },
+  },
+  sourceLang: {
+    type: String,
+    enum: ["en", "hi", "mr"],
+    default: "en",
+  },
+  sourceHash: {
+    type: String,
+    default: "",
+  },
+  edited: {
+    en: { type: Boolean, default: false },
+    hi: { type: Boolean, default: false },
+    mr: { type: Boolean, default: false },
   },
   resetPasswordToken: String,
   resetPasswordTime: Date,

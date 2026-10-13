@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { createLand } from "../../redux/actions/lands";
+import TranslationsReviewSection from "./TranslationsReviewSection";
 
 const CreateLand = () => {
     const{ seller } = useSelector((state) => state.seller);
@@ -202,6 +203,13 @@ const CreateLand = () => {
                     }
                 </div>
                 <br />
+
+                <TranslationsReviewSection
+                    model="lands"
+                    sourceName={name}
+                    sourceDescription={description}
+                />
+
                 <div>
                 <input
                 type="submit"

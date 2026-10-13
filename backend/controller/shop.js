@@ -16,6 +16,8 @@ const cloudinary = require("cloudinary");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const sendShopToken = require("../utils/shopToken");
+const { getRequestedLang, applyTranslations } = require("../utils/applyTranslations");
+const { enqueueTranslation } = require("../utils/translationQueue");
 
 // create activation token
 const createActivationToken = (seller) => {
@@ -164,9 +166,12 @@ router.get(
         return next(new ErrorHandler("Shop does not exist", 404));
       }
 
+      const targetLang = getRequestedLang(req);
+      const translatedSeller = applyTranslations(seller, targetLang, "shop");
+
       res.status(200).json({
         success: true,
-        seller,
+        seller: translatedSeller,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -204,9 +209,13 @@ router.get(
       if (!shop) {
         return next(new ErrorHandler("Shop not found", 404));
       }
+
+      const targetLang = getRequestedLang(req);
+      const translatedShop = applyTranslations(shop, targetLang, "shop");
+
       res.status(200).json({
         success: true,
-        shop,
+        shop: translatedShop,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -273,6 +282,9 @@ router.put(
 
       await shop.save();
 
+      // Enqueue background translation for updated seller profile
+      enqueueTranslation("shop", shop._id);
+
       res.status(200).json({
         success: true,
         shop,
@@ -293,9 +305,13 @@ router.get(
       const sellers = await Shop.find().sort({
         createdAt: -1,
       });
+
+      const targetLang = getRequestedLang(req);
+      const translatedSellers = applyTranslations(sellers, targetLang, "shop");
+
       res.status(200).json({
         success: true,
-        sellers,
+        sellers: translatedSellers,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

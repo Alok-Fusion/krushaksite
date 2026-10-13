@@ -484,5 +484,81 @@ router.get(
   })
 );
 
+// In-memory cache for chat message translations: key -> { text, translatedFrom, timestamp }
+const messageTranslationCache = new Map();
+const MSG_CACHE_MAX = 500;
+
+// POST /translate-message - On-demand translation for chat messages
+router.post(
+  "/translate-message",
+  aiLimiter,
+  catchAsyncErrors(async (req, res, next) => {
+    const { messageId, text, targetLang = "en" } = req.body;
+
+    if (!text || typeof text !== "string" || !text.trim()) {
+      return next(new ErrorHandler("Text to translate is required", 400));
+    }
+
+    const trimmedText = text.trim();
+    if (trimmedText.length > 1000) {
+      return next(
+        new ErrorHandler("Message length exceeds maximum limit of 1000 characters", 400)
+      );
+    }
+
+    const validLangs = ["en", "hi", "mr"];
+    if (!validLangs.includes(targetLang.toLowerCase())) {
+      return next(
+        new ErrorHandler("Invalid target language. Supported: en, hi, mr", 400)
+      );
+    }
+
+    const normalizedTarget = targetLang.toLowerCase();
+    const cacheKey = `${messageId || trimmedText}_${normalizedTarget}`;
+
+    // Check in-memory cache
+    if (messageTranslationCache.has(cacheKey)) {
+      const cached = messageTranslationCache.get(cacheKey);
+      return res.status(200).json({
+        success: true,
+        text: cached.text,
+        translatedFrom: cached.translatedFrom,
+        cached: true,
+      });
+    }
+
+    const { detectLang, translateChatMessage } = require("../utils/translate");
+    const detectedSource = detectLang(trimmedText);
+
+    if (detectedSource === normalizedTarget) {
+      return res.status(200).json({
+        success: true,
+        text: trimmedText,
+        translatedFrom: detectedSource,
+      });
+    }
+
+    const result = await translateChatMessage(trimmedText, normalizedTarget);
+
+    // Cache translated message
+    messageTranslationCache.set(cacheKey, {
+      text: result.text,
+      translatedFrom: result.translatedFrom,
+      timestamp: Date.now(),
+    });
+
+    if (messageTranslationCache.size > MSG_CACHE_MAX) {
+      const oldestKey = messageTranslationCache.keys().next().value;
+      messageTranslationCache.delete(oldestKey);
+    }
+
+    res.status(200).json({
+      success: true,
+      text: result.text,
+      translatedFrom: result.translatedFrom,
+    });
+  })
+);
+
 module.exports = router;
 

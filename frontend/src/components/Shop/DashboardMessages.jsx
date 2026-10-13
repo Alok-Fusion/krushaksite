@@ -9,6 +9,7 @@ import styles from "../../styles/styles";
 import { TfiGallery } from "react-icons/tfi";
 import socketIO from "socket.io-client";
 import { format } from "timeago.js";
+import ChatMessageItem from "../common/ChatMessageItem";
 const ENDPOINT = process.env.REACT_APP_SOCKET_URL || "http://localhost:4000/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 const DashboardMessages = () => {
@@ -391,19 +392,7 @@ const SellerInbox = ({
                   />
                 )}
                 {item.text !== "" && (
-                  <div>
-                    <div
-                      className={`w-max p-2 rounded ${
-                        item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]"
-                      } text-[#fff] h-min`}
-                    >
-                      <p>{item.text}</p>
-                    </div>
-
-                    <p className="text-[12px] text-[#000000d3] pt-1">
-                      {format(item.createdAt)}
-                    </p>
-                  </div>
+                  <ChatMessageItem item={item} isOwnMessage={item.sender === sellerId} />
                 )}
               </div>
             );

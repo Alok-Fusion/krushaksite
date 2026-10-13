@@ -219,6 +219,66 @@ See workflow configuration in [`.github/workflows/ci.yml`](.github/workflows/ci.
 
 ---
 
+## Multilingual Support (English, Hindi, Marathi)
+
+Krushak provides full-stack multilingual localization across Indian English (`en`), Hindi (`hi`), and Marathi (`mr`).
+
+### 1. UI Translation Architecture
+- **Framework**: Built with `i18next`, `react-i18next`, and `i18next-browser-languagedetector`.
+- **Namespaces**: Organized in `frontend/src/i18n/{en,hi,mr}.json` across 10 namespaces: `common`, `nav`, `auth`, `shop`, `products`, `cart`, `checkout`, `admin`, `guide`, `pricetrends`.
+- **Language Switcher**: Prominently accessible in the main consumer header, mobile drawer, seller dashboard header, and admin header. Persists in `localStorage` (`krushak_language`), defaults to browser language, falls back to English, and dynamically updates `<html lang="...">`.
+- **Typography & Layout**: Automatically loads Google Font **Noto Sans Devanagari** for Hindi and Marathi script rendering, with responsive layout overflow protections across navbar items, buttons, cards, and tables.
+- **Localization Formatters**: Localized currency, numbers, and dates via `Intl.NumberFormat` and `Intl.DateTimeFormat` (`en-IN`, `hi-IN`, `mr-IN`) in `frontend/src/utils/formatters.js`.
+- **Key Parity Audit**: Verified in CI with `node scripts/check-i18n.js` ensuring zero missing keys across English, Hindi, and Marathi dictionaries.
+
+### 2. User-Generated Content Translation Architecture
+- **Model Schemas**: `Product`, `Lands`, `Shop`, and embedded `reviews` schemas include:
+  - `translations: { en: Object, hi: Object, mr: Object }` holding translatable fields only.
+  - `sourceLang`: Original language of creation (`en` | `hi` | `mr`).
+  - `sourceHash`: Cryptographic SHA-256 hash of translatable fields.
+  - `edited: { en: Boolean, hi: Boolean, mr: Boolean }`: Protects manually curated translations.
+- **Gemini Translation Service (`backend/utils/translate.js`)**:
+  - Prompts Google Gemini 1.5 Flash strictly as data translation.
+  - Preserves brand names (e.g. *Bayer*, *IFFCO*, *UPL*, *Mahyco*), variety names (*Pusa Basmati*, *Sharbati*), numbers, units (kg, quintal, acre, guntha, hectare), and currency amounts (₹, Rs).
+  - Uses domain agricultural terms strictly conforming to `backend/utils/glossary.json`.
+  - JSON schema enforcement, single-retry resilience, and graceful fallback to original text.
+- **Background In-Process Queue (`backend/utils/translationQueue.js`)**:
+  - Automatically enqueues documents on create and update.
+  - Skips translation if `sourceHash` is unchanged or if target language has `edited: true`.
+- **Localized Content API**:
+  - `GET` endpoints for products, lands, shops, and reviews accept `?lang=en|hi|mr` (or `Accept-Language` header) and overlay translated text onto standard field names (`name`, `description`), preserving response shapes and providing `isTranslated`, `translatedFrom`, and `original` objects.
+  - Search queries match against both canonical and translated fields in all three languages.
+- **Owner Translation Customization**:
+  - `PUT /api/translations/:model/:id/:lang`: Allows document owners (verified via JWT authentication and seller ownership checks) to edit translations and marks `edited = true`.
+- **On-Demand Chat Message Translation**:
+  - `POST /api/ai/translate-message`: Translates chat messages on demand with length capped at 1000 characters, protected by `aiLimiter`, and backed by an in-memory cache keyed by message ID and target language.
+- **Frontend Attribution & Review**:
+  - Displays `"Translated from {{language}}"` attribution badge with an instant `"Show original"` / `"Show translation"` toggle.
+  - Sellers have a collapsed **Multilingual Translations** section in listing creation/editing forms for preview and manual review.
+
+### 3. Agricultural Glossary Location
+- Terminology mappings are stored in [`backend/utils/glossary.json`](backend/utils/glossary.json).
+- Contains vetted agricultural translations for commodities (seeds, fertilizer, urea, DAP, potash, mandi, quintal, kharif, rabi, acreage, soil types).
+
+### 4. How to Add a New Language (e.g., Gujarati or Telugu)
+1. Add the language code (e.g. `gu` or `te`) to `backend/utils/glossary.json` with domain terminology.
+2. Add translation file `frontend/src/i18n/gu.json` matching all keys in `en.json`.
+3. Register the new language in `frontend/src/i18n/i18n.js` and `frontend/src/components/Layout/LanguageSwitcher.jsx`.
+4. Add the language key to model schemas (`translations: { en, hi, mr, gu }` and `edited: { en, hi, mr, gu }`).
+5. Run `node scripts/check-i18n.js` to verify dictionary parity.
+
+### 5. Running the Translations Backfill Script
+To populate translations for existing database listings:
+```bash
+node scripts/backfill-translations.js
+```
+The backfill script is **idempotent**, **rate-limited** (600ms delay between Gemini API calls), and **resumable** (tracks completed IDs in `scripts/.backfill-checkpoint.json`).
+
+> [!IMPORTANT]
+> **Native Speaker Review Disclaimer**: Machine-generated translations produced by Gemini AI provide strong semantic coverage, but dialectical and regional agricultural nuances vary across states. High-impact public listings should be reviewed by a native Hindi/Marathi speaker before commercial publication.
+
+---
+
 ## Deployment Guide
 
 - **Frontend (Vercel)**: Configured with [`frontend/vercel.json`](frontend/vercel.json) to handle single-page routing without 404s.
