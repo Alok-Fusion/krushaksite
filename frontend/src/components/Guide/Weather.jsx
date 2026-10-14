@@ -3,7 +3,10 @@ import { HiLocationMarker } from "react-icons/hi";
 import { WiHumidity } from "react-icons/wi";
 import { TiWeatherWindy } from "react-icons/ti";
 import { CiTempHigh } from "react-icons/ci";
+import { useTranslation } from "react-i18next";
+
 const Weather = () => {
+  const { t } = useTranslation();
   const api = {
     key: "0a5cba009d748e0bf9b924bf3fb1a977",
     base: "https://api.openweathermap.org/data/2.5/",
@@ -28,7 +31,7 @@ const Weather = () => {
     >
     
       <h1 className=" text-center text-[35px] text-white font-Poppins font-semibold">
-        Weather Information
+        {t("weather.title")}
       </h1>
       <div  className="flex justify-center">
       <div className="container w-[40%] bg-[#b7b7b717] rounded-3xl text-white">
@@ -36,7 +39,7 @@ const Weather = () => {
         <div className="flex justify-center relative">
           <input
             type="text"
-            placeholder="Enter your city name"
+            placeholder={t("weather.cityPlaceholder")}
             onChange={(e) => setSearch(e.target.value)}
             className="h-[40px] w-auto px-2 bg-[#b7b7b717] border-[2px] rounded-2px justify-end "
           />
@@ -44,7 +47,7 @@ const Weather = () => {
             onClick={searchPressed}
             className="border-[2px] rounded-2px h-[40px] w-auto bg-[#b7b7b717] "
           >
-            Search
+            {t("weather.searchBtn")}
           </button>
         </div>
         <br />
@@ -75,14 +78,14 @@ const Weather = () => {
             <div className=" flex justify-center">
               <WiHumidity size={40} />
               <h5 className="font-Poppins font-bold text-[47px] ">
-                {weather.main.humidity}% Humidity
+                {t("weather.humidity", { val: weather.main.humidity })}
               </h5>
             </div>
             <br />
             <div className=" flex justify-center">
               <TiWeatherWindy size={40} />
               <h5 className="font-Poppins font-bold text-[47px] ">
-                {weather.wind.speed} Kmph
+                {t("weather.windSpeed", { val: weather.wind.speed })}
               </h5>
             </div>
           </div>
@@ -113,14 +116,14 @@ const Weather = () => {
             <div className=" flex justify-center">
               <WiHumidity size={40} />
               <h5 className="font-Poppins font-bold text-[47px] ">
-                33% Humidity
+                {t("weather.humidity", { val: 33 })}
               </h5>
             </div>
             <br />
             <div className=" flex justify-center">
               <TiWeatherWindy size={40} />
               <h5 className="font-Poppins font-bold text-[47px] ">
-                6.1 Kmph
+                {t("weather.windSpeed", { val: 6.1 })}
               </h5>
             </div>
           </div>

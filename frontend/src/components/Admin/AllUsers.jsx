@@ -10,8 +10,10 @@ import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const AllUsers = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
@@ -23,33 +25,33 @@ const AllUsers = () => {
 
   const handleDelete = async (id) => {
     await axios
-    .delete(`${server}/user/delete-user/${id}`, { withCredentials: true })
-    .then((res) => {
-      toast.success(res.data.message);
-    });
+      .delete(`${server}/user/delete-user/${id}`, { withCredentials: true })
+      .then((res) => {
+        toast.success(res.data.message);
+      });
 
-  dispatch(getAllUsers());
+    dispatch(getAllUsers());
   };
 
   const columns = [
-    { field: "id", headerName: "User ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: t("admin.userId"), minWidth: 150, flex: 0.7 },
 
     {
       field: "name",
-      headerName: "name",
+      headerName: t("admin.name"),
       minWidth: 130,
       flex: 0.7,
     },
     {
       field: "email",
-      headerName: "Email",
+      headerName: t("admin.email"),
       type: "text",
       minWidth: 130,
       flex: 0.7,
     },
     {
       field: "role",
-      headerName: "User Role",
+      headerName: t("admin.userRole"),
       type: "text",
       minWidth: 130,
       flex: 0.7,
@@ -57,7 +59,7 @@ const AllUsers = () => {
 
     {
       field: "joinedAt",
-      headerName: "joinedAt",
+      headerName: t("admin.joinedAt"),
       type: "text",
       minWidth: 130,
       flex: 0.8,
@@ -67,7 +69,7 @@ const AllUsers = () => {
       field: " ",
       flex: 1,
       minWidth: 150,
-      headerName: "Delete User",
+      headerName: t("admin.deleteUser"),
       type: "number",
       sortable: false,
       renderCell: (params) => {
@@ -97,7 +99,7 @@ const AllUsers = () => {
   return (
     <div className="w-full flex justify-center pt-5">
       <div className="w-[97%]">
-        <h3 className="text-[22px] font-Poppins pb-2">All Users</h3>
+        <h3 className="text-[22px] font-Poppins pb-2">{t("admin.allUsers")}</h3>
         <div className="w-full min-h-[45vh] bg-white rounded">
           <DataGrid
             rows={row}
@@ -114,20 +116,20 @@ const AllUsers = () => {
                 <RxCross1 size={25} onClick={() => setOpen(false)} />
               </div>
               <h3 className="text-[25px] text-center py-5 font-Poppins text-[#000000cb]">
-                Are you sure you wanna delete this user?
+                {t("admin.deleteUserConfirm")}
               </h3>
               <div className="w-full flex items-center justify-center">
                 <div
-                  className={`${styles.button} text-white text-[18px] !h-[42px] mr-4`}
+                  className={`${styles.button} text-white text-[18px] !h-[42px] mr-4 cursor-pointer`}
                   onClick={() => setOpen(false)}
                 >
-                  cancel
+                  {t("common.cancel")}
                 </div>
                 <div
-                  className={`${styles.button} text-white text-[18px] !h-[42px] ml-4`}
-                  onClick={() =>  setOpen(false) || handleDelete(userId)}
+                  className={`${styles.button} text-white text-[18px] !h-[42px] ml-4 cursor-pointer`}
+                  onClick={() => setOpen(false) || handleDelete(userId)}
                 >
-                  confirm
+                  {t("common.confirm")}
                 </div>
               </div>
             </div>
@@ -139,3 +141,4 @@ const AllUsers = () => {
 };
 
 export default AllUsers;
+

@@ -2,13 +2,15 @@ import { React, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../../styles/styles";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 
 const Login = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const [phoneNumber,setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
 
@@ -25,12 +27,12 @@ const Login = () => {
         { withCredentials: true }
       )
       .then((res) => {
-        toast.success("Login Success!");
+        toast.success(t("auth.loginSuccess"));
         navigate("/");
         window.location.reload(true);
       })
       .catch((err) => {
-        toast.error(err.response.data.message);
+        toast.error(err.response?.data?.message || t("common.error"));
       });
   };
 
@@ -44,10 +46,10 @@ const Login = () => {
           />
         </Link>
       </div>
-      <div className=" bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Login to your account
+            {t("auth.loginTitle")}
           </h2>
         </div>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -55,16 +57,17 @@ const Login = () => {
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="phoneNumber"
                   className="block text-sm font-medium text-gray-700"
                 >
-                Phone Number
+                  {t("auth.phoneLabel")}
                 </label>
                 <div className="mt-1">
                   <input
                     type="text"
                     name="phoneNumber"
                     autoComplete="phoneNumber"
+                    placeholder={t("auth.phonePlaceholder")}
                     required
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
@@ -77,13 +80,14 @@ const Login = () => {
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Password
+                  {t("auth.passwordLabel")}
                 </label>
                 <div className="mt-1 relative">
                   <input
                     type={visible ? "text" : "password"}
                     name="password"
                     autoComplete="current-password"
+                    placeholder={t("auth.passwordPlaceholder")}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -116,7 +120,7 @@ const Login = () => {
                     htmlFor="remember-me"
                     className="ml-2 block text-sm text-gray-900"
                   >
-                    Remember me
+                    {t("auth.rememberMe")}
                   </label>
                 </div>
                 <div className="text-sm">
@@ -124,7 +128,7 @@ const Login = () => {
                     href=".forgot-password"
                     className="font-medium text-blue-600 hover:text-blue-500"
                   >
-                    Forgot your password?
+                    {t("auth.forgotPassword")}
                   </a>
                 </div>
               </div>
@@ -133,13 +137,13 @@ const Login = () => {
                   type="submit"
                   className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
                 >
-                  Submit
+                  {t("auth.loginButton")}
                 </button>
               </div>
               <div className={`${styles.noramlFlex} w-full`}>
-                <h4>Not have any account?</h4>
+                <h4>{t("auth.dontHaveAccount")}</h4>
                 <Link to="/sign-up" className="text-blue-600 pl-2">
-                  Sign Up
+                  {t("auth.signUp")}
                 </Link>
               </div>
             </form>

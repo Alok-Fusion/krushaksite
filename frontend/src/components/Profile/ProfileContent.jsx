@@ -23,8 +23,10 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { getAllOrdersOfUser } from "../../redux/actions/order";
+import { useTranslation } from "react-i18next";
 
 const ProfileContent = ({ active }) => {
+  const { t } = useTranslation();
   const { user, error, successMessage } = useSelector((state) => state.user);
   const [name, setName] = useState(user && user.name);
   const [email, setEmail] = useState(user && user.email);
@@ -107,7 +109,7 @@ const ProfileContent = ({ active }) => {
             <form onSubmit={handleSubmit} aria-required={true}>
               <div className="w-full 800px:flex block pb-3">
                 <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Full Name</label>
+                  <label className="block pb-2">{t("profile.fullName")}</label>
                   <input
                     type="text"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -117,7 +119,7 @@ const ProfileContent = ({ active }) => {
                   />
                 </div>
                 <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Email Address</label>
+                  <label className="block pb-2">{t("profile.email")}</label>
                   <input
                     type="text"
                     className={`${styles.input} !w-[95%] mb-1 800px:mb-0`}
@@ -130,7 +132,7 @@ const ProfileContent = ({ active }) => {
 
               <div className="w-full 800px:flex block pb-3">
                 <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Phone Number</label>
+                  <label className="block pb-2">{t("profile.phoneNumber")}</label>
                   <input
                     type="number"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -141,7 +143,7 @@ const ProfileContent = ({ active }) => {
                 </div>
 
                 <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Enter your password</label>
+                  <label className="block pb-2">{t("auth.passwordLabel")}</label>
                   <input
                     type="password"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -154,7 +156,7 @@ const ProfileContent = ({ active }) => {
               <input
                 className={`w-[250px] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
                 required
-                value="Update"
+                value={t("profile.updateProfile")}
                 type="submit"
               />
             </form>
@@ -201,6 +203,7 @@ const ProfileContent = ({ active }) => {
 };
 
 const AllOrders = () => {
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.user);
   const { orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
@@ -212,11 +215,11 @@ const AllOrders = () => {
   }, [dispatch, user?._id]);
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: t("admin.orderId"), minWidth: 150, flex: 0.7 },
 
     {
       field: "status",
-      headerName: "Status",
+      headerName: t("common.status"),
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
@@ -227,7 +230,7 @@ const AllOrders = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: t("cart.quantity"),
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -235,7 +238,7 @@ const AllOrders = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: t("checkout.totalPayable"),
       type: "number",
       minWidth: 130,
       flex: 0.8,
@@ -288,6 +291,7 @@ const AllOrders = () => {
 };
 
 const AllRefundOrders = () => {
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.user);
   const { orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
@@ -302,11 +306,11 @@ const AllRefundOrders = () => {
     orders && orders.filter((item) => item.status === "Processing refund");
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: t("admin.orderId"), minWidth: 150, flex: 0.7 },
 
     {
       field: "status",
-      headerName: "Status",
+      headerName: t("common.status"),
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
@@ -317,7 +321,7 @@ const AllRefundOrders = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: t("cart.quantity"),
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -325,7 +329,7 @@ const AllRefundOrders = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: t("checkout.totalPayable"),
       type: "number",
       minWidth: 130,
       flex: 0.8,
@@ -359,7 +363,7 @@ const AllRefundOrders = () => {
       row.push({
         id: item._id,
         itemsQty: item.cart.length,
-        total: "US$ " + item.totalPrice,
+        total: "₹ " + item.totalPrice,
         status: item.status,
       });
     });
@@ -378,6 +382,7 @@ const AllRefundOrders = () => {
 };
 
 const TrackOrder = () => {
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.user);
   const { orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
@@ -389,11 +394,11 @@ const TrackOrder = () => {
   }, [dispatch, user?._id]);
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: t("admin.orderId"), minWidth: 150, flex: 0.7 },
 
     {
       field: "status",
-      headerName: "Status",
+      headerName: t("common.status"),
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
@@ -404,7 +409,7 @@ const TrackOrder = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: t("cart.quantity"),
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -412,7 +417,7 @@ const TrackOrder = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: t("checkout.totalPayable"),
       type: "number",
       minWidth: 130,
       flex: 0.8,
@@ -446,7 +451,7 @@ const TrackOrder = () => {
       row.push({
         id: item._id,
         itemsQty: item.cart.length,
-        total: "US$ " + item.totalPrice,
+        total: "₹ " + item.totalPrice,
         status: item.status,
       });
     });
@@ -465,6 +470,7 @@ const TrackOrder = () => {
 };
 
 const ChangePassword = () => {
+  const { t } = useTranslation();
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -491,7 +497,7 @@ const ChangePassword = () => {
   return (
     <div className="w-full px-5">
       <h1 className="block text-[25px] text-center font-[600] text-[#000000ba] pb-2">
-        Change Password
+        {t("profile.changePassword")}
       </h1>
       <div className="w-full">
         <form
@@ -500,7 +506,7 @@ const ChangePassword = () => {
           className="flex flex-col items-center"
         >
           <div className=" w-[100%] 800px:w-[50%] mt-5">
-            <label className="block pb-2">Enter your old password</label>
+            <label className="block pb-2">{t("profile.oldPassword")}</label>
             <input
               type="password"
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -510,7 +516,7 @@ const ChangePassword = () => {
             />
           </div>
           <div className=" w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Enter your new password</label>
+            <label className="block pb-2">{t("profile.newPassword")}</label>
             <input
               type="password"
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -520,7 +526,7 @@ const ChangePassword = () => {
             />
           </div>
           <div className=" w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Enter your confirm password</label>
+            <label className="block pb-2">{t("profile.confirmPassword")}</label>
             <input
               type="password"
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -531,7 +537,7 @@ const ChangePassword = () => {
             <input
               className={`w-[95%] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
               required
-              value="Update"
+              value={t("profile.updatePassword")}
               type="submit"
             />
           </div>
@@ -542,6 +548,7 @@ const ChangePassword = () => {
 };
 
 const Address = () => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
@@ -608,13 +615,13 @@ const Address = () => {
               />
             </div>
             <h1 className="text-center text-[25px] font-Poppins">
-              Add New Address
+              {t("profile.addNewAddress")}
             </h1>
             <div className="w-full">
               <form aria-required onSubmit={handleSubmit} className="w-full">
                 <div className="w-full block p-4">
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Country</label>
+                    <label className="block pb-2">{t("checkout.chooseCountry")}</label>
                     <select
                       name=""
                       id=""
@@ -623,7 +630,7 @@ const Address = () => {
                       className="w-[95%] border h-[40px] rounded-[5px]"
                     >
                       <option value="" className="block border pb-2">
-                        choose your country
+                        {t("checkout.chooseCountry")}
                       </option>
                       {Country &&
                         Country.getAllCountries().map((item) => (
@@ -639,7 +646,7 @@ const Address = () => {
                   </div>
 
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Choose your City</label>
+                    <label className="block pb-2">{t("checkout.chooseCity")}</label>
                     <select
                       name=""
                       id=""
@@ -648,7 +655,7 @@ const Address = () => {
                       className="w-[95%] border h-[40px] rounded-[5px]"
                     >
                       <option value="" className="block border pb-2">
-                        choose your city
+                        {t("checkout.chooseCity")}
                       </option>
                       {State &&
                         State.getStatesOfCountry(country).map((item) => (
@@ -664,7 +671,7 @@ const Address = () => {
                   </div>
 
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Address 1</label>
+                    <label className="block pb-2">{t("checkout.address1")}</label>
                     <input
                       type="address"
                       className={`${styles.input}`}
@@ -674,7 +681,7 @@ const Address = () => {
                     />
                   </div>
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Address 2</label>
+                    <label className="block pb-2">{t("checkout.address2")}</label>
                     <input
                       type="address"
                       className={`${styles.input}`}
@@ -685,7 +692,7 @@ const Address = () => {
                   </div>
 
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Zip Code</label>
+                    <label className="block pb-2">{t("profile.pinCode")}</label>
                     <input
                       type="number"
                       className={`${styles.input}`}
@@ -696,7 +703,7 @@ const Address = () => {
                   </div>
 
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Address Type</label>
+                    <label className="block pb-2">{t("profile.addressType")}</label>
                     <select
                       name=""
                       id=""
@@ -705,7 +712,7 @@ const Address = () => {
                       className="w-[95%] border h-[40px] rounded-[5px]"
                     >
                       <option value="" className="block border pb-2">
-                        Choose your Address Type
+                        {t("profile.addressType")}
                       </option>
                       {addressTypeData &&
                         addressTypeData.map((item) => (
@@ -736,13 +743,13 @@ const Address = () => {
       )}
       <div className="flex w-full items-center justify-between">
         <h1 className="text-[25px] font-[600] text-[#000000ba] pb-2">
-          My Addresses
+          {t("profile.savedAddresses")}
         </h1>
         <div
           className={`${styles.button} !rounded-md`}
           onClick={() => setOpen(true)}
         >
-          <span className="text-[#fff]">Add New</span>
+          <span className="text-[#fff]">{t("profile.addNewAddress")}</span>
         </div>
       </div>
       <br />
@@ -777,7 +784,7 @@ const Address = () => {
 
       {user && user.addresses.length === 0 && (
         <h5 className="text-center pt-8 text-[18px]">
-          You not have any saved address!
+          {t("common.noData")}
         </h5>
       )}
     </div>

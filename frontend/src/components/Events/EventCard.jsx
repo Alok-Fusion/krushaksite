@@ -5,22 +5,24 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addTocart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const EventCard = ({ active, data }) => {
+  const { t } = useTranslation();
   const { cart } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
   const addToCartHandler = (data) => {
     const isItemExists = cart && cart.find((i) => i._id === data._id);
     if (isItemExists) {
-      toast.error("Item already in cart!");
+      toast.error(t("products.itemAlreadyInCart"));
     } else {
       if (data.stock < 1) {
-        toast.error("Product stock limited!");
+        toast.error(t("products.stockLimited"));
       } else {
         const cartData = { ...data, qty: 1 };
         dispatch(addTocart(cartData));
-        toast.success("Item added to cart successfully!");
+        toast.success(t("products.addedToCart"));
       }
     }
   }
@@ -39,23 +41,25 @@ const EventCard = ({ active, data }) => {
         <div className="flex py-2 justify-between">
           <div className="flex">
             <h5 className="font-[500] text-[18px] text-[#d55b45] pr-3 line-through">
-              {data.originalPrice}$
+              ₹{data.originalPrice}
             </h5>
             <h5 className="font-bold text-[20px] text-[#333] font-Roboto">
-              {data.discountPrice}$
+              ₹{data.discountPrice}
             </h5>
           </div>
           <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">
-            {data.sold_out} sold
+            {t("products.soldCount", { count: data.sold_out || 0 })}
           </span>
         </div>
         <CountDown data={data} />
         <br />
         <div className="flex items-center">
           <Link to={`/product/${data._id}?isEvent=true`}>
-            <div className={`${styles.button} text-[#fff]`}>See Details</div>
+            <div className={`${styles.button} text-[#fff]`}>{t("common.viewDetails")}</div>
           </Link>
-          <div className={`${styles.button} text-[#fff] ml-5`} onClick={() => addToCartHandler(data)}>Add to cart</div>
+          <div className={`${styles.button} text-[#fff] ml-5`} onClick={() => addToCartHandler(data)}>
+            {t("products.addToCart")}
+          </div>
         </div>
       </div>
     </div>

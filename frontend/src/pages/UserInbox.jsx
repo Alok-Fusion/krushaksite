@@ -10,10 +10,12 @@ import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import { TfiGallery } from "react-icons/tfi";
 import styles from "../styles/styles";
 import ChatMessageItem from "../components/common/ChatMessageItem";
+import { useTranslation } from "react-i18next";
 const ENDPOINT = process.env.REACT_APP_SOCKET_URL || "http://localhost:4000/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 const UserInbox = () => {
+  const { t } = useTranslation();
   const { user,loading } = useSelector((state) => state.user);
   const [conversations, setConversations] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
@@ -224,7 +226,7 @@ const UserInbox = () => {
         <>
           <Header />
           <h1 className="text-center text-[30px] py-3 font-Poppins">
-            All Messages
+            {t("nav.inbox")}
           </h1>
           {/* All messages list */}
           {conversations &&
@@ -276,6 +278,7 @@ const MessageList = ({
   setActiveStatus,
   loading
 }) => {
+  const { t } = useTranslation();
   const [active, setActive] = useState(0);
   const [user, setUser] = useState([]);
   const navigate = useNavigate();
@@ -327,7 +330,7 @@ const MessageList = ({
         <h1 className="text-[18px]">{user?.name}</h1>
         <p className="text-[16px] text-[#000c]">
           {!loading && data?.lastMessageId !== userData?._id
-            ? "You:"
+            ? t("common.you") + " "
             : userData?.name.split(" ")[0] + ": "}{" "}
           {data?.lastMessage}
         </p>
@@ -348,6 +351,7 @@ const SellerInbox = ({
   scrollRef,
   handleImageUpload,
 }) => {
+  const { t } = useTranslation();
   return (
     <div className="w-[full] min-h-full flex flex-col justify-between p-5">
       {/* message header */}
@@ -360,7 +364,7 @@ const SellerInbox = ({
           />
           <div className="pl-3">
             <h1 className="text-[18px] font-[600]">{userData?.name}</h1>
-            <h1>{activeStatus ? "Active Now" : ""}</h1>
+            <h1>{activeStatus ? t("common.activeNow") : ""}</h1>
           </div>
         </div>
         <AiOutlineArrowRight
@@ -379,6 +383,7 @@ const SellerInbox = ({
                 item.sender === sellerId ? "justify-end" : "justify-start"
               }`}
               ref={scrollRef}
+              key={index}
             >
               {item.sender !== sellerId && (
                 <img
@@ -391,6 +396,7 @@ const SellerInbox = ({
                 <img
                   src={`${item.images?.url}`}
                   className="w-[300px] h-[300px] object-cover rounded-[10px] ml-2 mb-2"
+                  alt=""
                 />
               )}
               {item.text !== "" && (
@@ -422,12 +428,12 @@ const SellerInbox = ({
           <input
             type="text"
             required
-            placeholder="Enter your message..."
+            placeholder={t("common.enterMessage")}
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             className={`${styles.input}`}
           />
-          <input type="submit" value="Send" className="hidden" id="send" />
+          <input type="submit" value={t("common.send")} className="hidden" id="send" />
           <label htmlFor="send">
             <AiOutlineSend
               size={20}
@@ -440,4 +446,4 @@ const SellerInbox = ({
   );
 };
 
-export default UserInbox;
+export default UserInbox;

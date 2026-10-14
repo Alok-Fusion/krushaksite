@@ -6,8 +6,10 @@ import { Link } from "react-router-dom";
 import Loader from "../Layout/Loader";
 import { getAllOrdersOfShop } from "../../redux/actions/order";
 import { AiOutlineArrowRight } from "react-icons/ai";
+import { useTranslation } from "react-i18next";
 
 const AllOrders = () => {
+  const { t } = useTranslation();
   const { orders, isLoading } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
 
@@ -20,11 +22,11 @@ const AllOrders = () => {
   }, [dispatch, seller?._id]);
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: t("admin.orderId"), minWidth: 150, flex: 0.7 },
 
     {
       field: "status",
-      headerName: "Status",
+      headerName: t("common.status"),
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
@@ -35,7 +37,7 @@ const AllOrders = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: t("cart.quantity"),
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -43,7 +45,7 @@ const AllOrders = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: t("checkout.totalPayable"),
       type: "number",
       minWidth: 130,
       flex: 0.8,

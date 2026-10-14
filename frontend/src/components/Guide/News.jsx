@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 const News = () => {
+  const { t } = useTranslation();
   const [news, setNews] = useState([]);
   useEffect(() => {
     axios
@@ -19,13 +22,13 @@ const News = () => {
       <div className={`${styles.section} bg-white`}>
         <br />
         <h1 className="text-center  font-Poppins font-extrabold text-[40px] text-[#101339ed]">
-          News Headlines
+          {t("guide.newsHeadlines")}
         </h1>
         <br/>
         <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] xl:grid-cols-4 xl:gap-[30px] mb-12 border-0 ml-2">
-          {news.map((val) => {
+          {news.map((val, idx) => {
             return (
-              <div>
+              <div key={idx}>
                 <div
                   className="w-[20rem] h-auto border border-1px shadow-sm rounded-[8px]"
                 >
@@ -33,7 +36,7 @@ const News = () => {
                     <img
                       src={val.urlToImage}
                       className="card-img-top w-full h-[170px] object-contain"
-                      alt="Loading..."
+                      alt={t("common.loading")}
                     />
                   </Link>
                   <div className="card-body">
@@ -44,7 +47,7 @@ const News = () => {
                     <p className="text-center">{val.description}</p>
                     <Link to={val.url}>
                       <p className="text-right font-Poppins text-blue-700">
-                        Read more
+                        {t("common.readMore")}
                       </p>
                     </Link>
                   </div>

@@ -10,9 +10,11 @@ import { TfiGallery } from "react-icons/tfi";
 import socketIO from "socket.io-client";
 import { format } from "timeago.js";
 import ChatMessageItem from "../common/ChatMessageItem";
+import { useTranslation } from "react-i18next";
 const ENDPOINT = process.env.REACT_APP_SOCKET_URL || "http://localhost:4000/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 const DashboardMessages = () => {
+  const { t } = useTranslation();
   const { seller,isLoading } = useSelector((state) => state.seller);
   const [conversations, setConversations] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
@@ -220,7 +222,7 @@ const DashboardMessages = () => {
       {!open && (
         <>
           <h1 className="text-center text-[30px] py-3 font-Poppins">
-            All Messages
+            {t("nav.inbox")}
           </h1>
           {/* All messages list */}
           {conversations &&
@@ -272,6 +274,7 @@ const MessageList = ({
   setActiveStatus,
   isLoading
 }) => {
+  const { t } = useTranslation();
   console.log(data);
   const [user, setUser] = useState([]);
   const navigate = useNavigate();
@@ -324,7 +327,7 @@ const MessageList = ({
         <h1 className="text-[18px]">{user?.name}</h1>
         <p className="text-[16px] text-[#000c]">
           {!isLoading && data?.lastMessageId !== user?._id
-            ? "You:"
+            ? t("common.you") + " "
             : user?.name?.split(" ")[0] + ": "}{" "}
           {data?.lastMessage}
         </p>
@@ -345,6 +348,7 @@ const SellerInbox = ({
   activeStatus,
   handleImageUpload,
 }) => {
+  const { t } = useTranslation();
   return (
     <div className="w-full min-h-full flex flex-col justify-between">
       {/* message header */}
@@ -357,7 +361,7 @@ const SellerInbox = ({
           />
           <div className="pl-3">
             <h1 className="text-[18px] font-[600]">{userData?.name}</h1>
-            <h1>{activeStatus ? "Active Now" : ""}</h1>
+            <h1>{activeStatus ? t("common.activeNow") : ""}</h1>
           </div>
         </div>
         <AiOutlineArrowRight
@@ -377,6 +381,7 @@ const SellerInbox = ({
                   item.sender === sellerId ? "justify-end" : "justify-start"
                 }`}
                 ref={scrollRef}
+                key={index}
               >
                 {item.sender !== sellerId && (
                   <img
@@ -421,12 +426,12 @@ const SellerInbox = ({
           <input
             type="text"
             required
-            placeholder="Enter your message..."
+            placeholder={t("common.enterMessage")}
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             className={`${styles.input}`}
           />
-          <input type="submit" value="Send" className="hidden" id="send" />
+          <input type="submit" value={t("common.send")} className="hidden" id="send" />
           <label htmlFor="send">
             <AiOutlineSend
               size={20}
@@ -440,3 +445,4 @@ const SellerInbox = ({
 };
 
 export default DashboardMessages;
+

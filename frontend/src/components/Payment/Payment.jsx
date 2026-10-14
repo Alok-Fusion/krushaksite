@@ -15,6 +15,8 @@ import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 import { RxCross1 } from "react-icons/rx";
+import { useTranslation } from "react-i18next";
+import { formatCurrency } from "../../utils/formatters";
 
 const Payment = () => {
   const [orderData, setOrderData] = useState([]);
@@ -209,6 +211,7 @@ const PaymentInfo = ({
   paymentHandler,
   cashOnDeliveryHandler,
 }) => {
+  const { t } = useTranslation();
   const [select, setSelect] = useState(1);
 
   return (
@@ -225,7 +228,7 @@ const PaymentInfo = ({
             ) : null}
           </div>
           <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
-            Pay with Debit/credit card
+            {t("checkout.payWithCard")}
           </h4>
         </div>
 
@@ -235,7 +238,7 @@ const PaymentInfo = ({
             <form className="w-full" onSubmit={paymentHandler}>
               <div className="w-full flex pb-3">
                 <div className="w-[50%]">
-                  <label className="block pb-2">Name On Card</label>
+                  <label className="block pb-2">{t("checkout.nameOnCard")}</label>
                   <input
                     required
                     placeholder={user && user.name}
@@ -244,7 +247,7 @@ const PaymentInfo = ({
                   />
                 </div>
                 <div className="w-[50%]">
-                  <label className="block pb-2">Exp Date</label>
+                  <label className="block pb-2">{t("checkout.expDate")}</label>
                   <CardExpiryElement
                     className={`${styles.input}`}
                     options={{
@@ -269,7 +272,7 @@ const PaymentInfo = ({
 
               <div className="w-full flex pb-3">
                 <div className="w-[50%]">
-                  <label className="block pb-2">Card Number</label>
+                  <label className="block pb-2">{t("checkout.cardNumber")}</label>
                   <CardNumberElement
                     className={`${styles.input} !h-[35px] !w-[95%]`}
                     options={{
@@ -291,7 +294,7 @@ const PaymentInfo = ({
                   />
                 </div>
                 <div className="w-[50%]">
-                  <label className="block pb-2">CVV</label>
+                  <label className="block pb-2">{t("checkout.cvv")}</label>
                   <CardCvcElement
                     className={`${styles.input} !h-[35px]`}
                     options={{
@@ -315,7 +318,7 @@ const PaymentInfo = ({
               </div>
               <input
                 type="submit"
-                value="Submit"
+                value={t("common.submit")}
                 className={`${styles.button} !bg-[#f63b60] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
               />
             </form>
@@ -336,18 +339,18 @@ const PaymentInfo = ({
             ) : null}
           </div>
           <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
-            Pay with Paypal
+            {t("checkout.payWithPaypal")}
           </h4>
         </div>
 
-        {/* pay with payement */}
+        {/* pay with payment */}
         {select === 2 ? (
           <div className="w-full flex border-b">
             <div
               className={`${styles.button} !bg-[#f63b60] text-white h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
               onClick={() => setOpen(true)}
             >
-              Pay Now
+              {t("checkout.payNow", { amount: "" })}
             </div>
             {open && (
               <div className="w-full fixed top-0 left-0 bg-[#00000039] h-screen flex items-center justify-center z-[99999]">
@@ -391,7 +394,7 @@ const PaymentInfo = ({
             ) : null}
           </div>
           <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
-            Cash on Delivery
+            {t("checkout.cashOnDelivery")}
           </h4>
         </div>
 
@@ -401,7 +404,7 @@ const PaymentInfo = ({
             <form className="w-full" onSubmit={cashOnDeliveryHandler}>
               <input
                 type="submit"
-                value="Confirm"
+                value={t("common.confirm")}
                 className={`${styles.button} !bg-[#f63b60] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
               />
             </form>
@@ -413,21 +416,22 @@ const PaymentInfo = ({
 };
 
 const CartData = ({ orderData }) => {
+  const { t, i18n } = useTranslation();
   const shipping = orderData?.shipping?.toFixed(2);
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
       <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">subtotal:</h3>
-        <h5 className="text-[18px] font-[600]">₹ {orderData?.subTotalPrice}</h5>
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">{t("checkout.subtotal")}</h3>
+        <h5 className="text-[18px] font-[600]">{formatCurrency(orderData?.subTotalPrice, i18n.language)}</h5>
       </div>
       <br />
       <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">shipping:</h3>
-        <h5 className="text-[18px] font-[600]">₹ {shipping}</h5>
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">{t("checkout.shipping")}</h3>
+        <h5 className="text-[18px] font-[600]">{formatCurrency(shipping, i18n.language)}</h5>
       </div>
       <br />
       <h5 className="text-[18px] font-[600] text-end pt-3">
-        ₹ {orderData?.totalPrice}
+        {formatCurrency(orderData?.totalPrice, i18n.language)}
       </h5>
       <br />
     </div>

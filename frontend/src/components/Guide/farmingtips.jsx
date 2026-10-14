@@ -2,14 +2,16 @@ import React from 'react'
 import { Link } from "react-router-dom";
 //import YouTube from 'react-youtube';
 import Bounce from 'react-reveal/Bounce'
+import { useTranslation } from "react-i18next";
 
-const farmingtips = ({farmingTips}) => {
+const Farmingtips = ({farmingTips}) => {
+  const { t } = useTranslation();
   return (
    <div>
     <Bounce middle distance='10%' duration={5000} > 
     <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-4 text-center text-3xl font-extrabold  " style={{color : "#422006"}}>
-          What is Farming ?
+          {t("guide.whatIsFarming")}
         </h2>
       </div> </Bounce>
     <div className='p-6'><p className='text-lg font-bold my-1' style={{color: "#009900",fontStyle: 'italic'}}>Farming is the process of working the ground, planting seeds, and growing edible plants. It can also include raising animals for milk or meat, or cultivating domestic animals, fish, birds, plants, and crops. The purpose of farming is to harvest products or reproduce a biological means of production. 
@@ -18,7 +20,7 @@ Synonyms of farming include: Agriculture, Cultivation, Husbandry, Land managemen
 <Bounce middle distance='10%' duration={5000} > 
 <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-4 text-center text-3xl font-extrabold  " style={{color : "#422006"}}>
-          What is Smart Farming ?
+          {t("guide.whatIsSmartFarming")}
         </h2>
       </div>
  </Bounce> 
@@ -27,7 +29,7 @@ Synonyms of farming include: Agriculture, Cultivation, Husbandry, Land managemen
  <Bounce middle distance='10%' duration={5000} > 
  <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-4 text-center text-3xl font-extrabold  " style={{color : "#422006"}}>
-          Smart Farming Tips & Techniques
+          {t("guide.smartFarmingTips")}
         </h2>
       </div>
       </Bounce>
@@ -49,7 +51,7 @@ Synonyms of farming include: Agriculture, Cultivation, Husbandry, Land managemen
             <Link to={tip.LinkUrl} className="inline-block">
             <div className='w-[110px] bg-transparent  h-[10px]  flex items-center justify-center rounded-[10px] cursor-pointer'>
                  <span className="text-[#000000] font-[italic] text-[18px] font-extrabold">
-                    Read more...
+                    {t("common.readMore")}
                  </span>
             </div>
         </Link>
@@ -65,5 +67,5 @@ Synonyms of farming include: Agriculture, Cultivation, Husbandry, Land managemen
   )
 }
 
-export default farmingtips;
+export default Farmingtips;
 

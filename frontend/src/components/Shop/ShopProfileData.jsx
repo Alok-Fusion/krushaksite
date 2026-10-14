@@ -7,8 +7,10 @@ import ProductCard from "../Route/ProductCard/ProductCard";
 import Ratings from "../Products/Ratings";
 import LandsCard from "../Route/LandsCard/LandsCard";
 import { getAllLandsShop } from "../../redux/actions/lands";
+import { useTranslation } from "react-i18next";
 
 const ShopProfileData = ({ isOwner }) => {
+  const { t } = useTranslation();
   const { products } = useSelector((state) => state.products);
   const { lands } = useSelector((state) => state.lands);
   const { id } = useParams();
@@ -36,7 +38,7 @@ const ShopProfileData = ({ isOwner }) => {
                 active === 1 ? "text-red-500" : "text-[#333]"
               } cursor-pointer pr-[20px]`}
             >
-              Seller Products
+              {t("shop.sellerProducts")}
             </h5>
           </div>
           <div className="flex items-center" onClick={() => setActive(2)}>
@@ -45,7 +47,7 @@ const ShopProfileData = ({ isOwner }) => {
                 active === 2 ? "text-red-500" : "text-[#333]"
               } cursor-pointer pr-[20px]`}
             >
-              Seller Lands
+              {t("shop.sellerLands")}
             </h5>
           </div>
 
@@ -55,7 +57,7 @@ const ShopProfileData = ({ isOwner }) => {
                 active === 3 ? "text-red-500" : "text-[#333]"
               } cursor-pointer pr-[20px]`}
             >
-              Seller Reviews
+              {t("shop.sellerReviews")}
             </h5>
           </div>
         </div>
@@ -64,7 +66,7 @@ const ShopProfileData = ({ isOwner }) => {
             <div>
               <Link to="/dashboard">
                 <div className={`${styles.button} !rounded-[4px] h-[42px]`}>
-                  <span className="text-[#fff]">Go Dashboard</span>
+                  <span className="text-[#fff]">{t("shop.goDashboard")}</span>
                 </div>
               </Link>
             </div>
@@ -73,6 +75,7 @@ const ShopProfileData = ({ isOwner }) => {
       </div>
 
       <br />
+
       {active === 1 && (
         <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] xl:grid-cols-4 xl:gap-[20px] mb-12 border-0">
           {products &&
@@ -120,7 +123,7 @@ const ShopProfileData = ({ isOwner }) => {
             ))}
           {allReviews && allReviews.length === 0 && (
             <h5 className="w-full text-center py-5 text-[18px]">
-              No Reviews have for this shop!
+              {t("shop.noReviews")}
             </h5>
           )}
         </div>
@@ -130,3 +133,4 @@ const ShopProfileData = ({ isOwner }) => {
 };
 
 export default ShopProfileData;
+

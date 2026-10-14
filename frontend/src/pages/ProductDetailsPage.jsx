@@ -8,8 +8,10 @@ import Loader from "../components/Layout/Loader";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { server } from "../server";
+import { useTranslation } from "react-i18next";
 
 const ProductDetailsPage = () => {
+  const { t } = useTranslation();
   const { allProducts, isLoading: productsLoading } = useSelector(
     (state) => state.products
   );
@@ -62,16 +64,16 @@ const ProductDetailsPage = () => {
       ) : (
         <div className="w-full text-center py-20 bg-white min-h-[50vh] flex flex-col justify-center items-center">
           <h3 className="text-[22px] font-medium text-gray-700 mb-4">
-            Product Not Found
+            {t("products.notFound")}
           </h3>
           <p className="text-gray-500 mb-6">
-            The product you are looking for may have been removed or does not exist.
+            {t("products.notFoundDesc")}
           </p>
           <Link
             to="/products"
             className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-medium transition"
           >
-            Browse Products
+            {t("products.browseProducts")}
           </Link>
         </div>
       )}

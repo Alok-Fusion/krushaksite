@@ -7,7 +7,10 @@ import Loader from '../Layout/Loader';
 import { DataGrid } from '@material-ui/data-grid';
 import { getAllLandsShop } from '../../redux/actions/lands';
 import { deleteLands } from '../../redux/actions/lands';
+import { useTranslation } from "react-i18next";
+
 const AllLands = () => {
+  const { t } = useTranslation();
   const { lands, isLoading } = useSelector((state) => state.lands);
   const {seller} = useSelector((state) => state.seller);
 
@@ -24,28 +27,28 @@ const AllLands = () => {
     window.location.reload();
   }
   const columns = [
-    { field: "id" , headerName: "Land Id", minWidth: 150, flex:0.7 },
+    { field: "id" , headerName: "ID", minWidth: 150, flex:0.7 },
     {
       field:"name",
-      headerName:"Name",
+      headerName: t("admin.name"),
       minWidth:100,
       flex:0.6,
     },
     {
       field:"price",
-      headerName:"Price",
+      headerName: t("shop.price"),
       minWidth:100,
       flex:0.6,
     },
     {
       field:"landlocation",
-      headerName:"Location",
+      headerName: t("shop.landLocation"),
       minWidth:150,
       flex:1.4,
     },
     {
       field:"area",
-      headerName:"Area",
+      headerName: t("shop.landArea"),
       type:"number",
       minWidth:80,
       flex:0.6,
@@ -96,7 +99,7 @@ const AllLands = () => {
       name: item.name,
       landlocation: item.landlocation,
       price: "₹ " + item.price,
-      area:item.area + " Acres",
+      area: item.area + " " + t("common.units.acre"),
     })
   })
   return (

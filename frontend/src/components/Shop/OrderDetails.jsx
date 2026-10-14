@@ -7,8 +7,10 @@ import { getAllOrdersOfShop } from "../../redux/actions/order";
 import { server } from "../../server";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const OrderDetails = () => {
+  const { t } = useTranslation();
   const { orders, isLoading } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
   const dispatch = useDispatch();
@@ -69,23 +71,23 @@ const OrderDetails = () => {
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center">
           <BsFillBagFill size={30} color="crimson" />
-          <h1 className="pl-2 text-[25px]">Order Details</h1>
+          <h1 className="pl-2 text-[25px]">{t("orderDetails.title")}</h1>
         </div>
         <Link to="/dashboard-orders">
           <div
             className={`${styles.button} !bg-[#fce1e6] !rounded-[4px] text-[#e94560] font-[600] !h-[45px] text-[18px]`}
           >
-            Order List
+            {t("shop.orderList")}
           </div>
         </Link>
       </div>
 
       <div className="w-full flex items-center justify-between pt-6">
         <h5 className="text-[#00000084]">
-          Order ID: <span>#{data?._id?.slice(0, 8)}</span>
+          {t("orderDetails.orderId")} <span>#{data?._id?.slice(0, 8)}</span>
         </h5>
         <h5 className="text-[#00000084]">
-          Placed on: <span>{data?.createdAt?.slice(0, 10)}</span>
+          {t("orderDetails.placedOn")} <span>{data?.createdAt?.slice(0, 10)}</span>
         </h5>
       </div>
 
@@ -94,7 +96,7 @@ const OrderDetails = () => {
       <br />
       {data &&
         data?.cart.map((item, index) => (
-          <div className="w-full flex items-start mb-5">
+          <div className="w-full flex items-start mb-5" key={index}>
             <img
               src={`${item.images[0]?.url}`}
               alt=""
@@ -111,14 +113,14 @@ const OrderDetails = () => {
 
       <div className="border-t w-full text-right">
         <h5 className="pt-3 text-[18px]">
-          Total Price: <strong>₹{data?.totalPrice}</strong>
+          {t("orderDetails.totalPrice")} <strong>₹{data?.totalPrice}</strong>
         </h5>
       </div>
       <br />
       <br />
       <div className="w-full 800px:flex items-center">
         <div className="w-full 800px:w-[60%]">
-          <h4 className="pt-3 text-[20px] font-[600]">Shipping Address:</h4>
+          <h4 className="pt-3 text-[20px] font-[600]">{t("orderDetails.shippingAddress")}</h4>
           <h4 className="pt-3 text-[20px]">
             {data?.shippingAddress.address1 +
               " " +
@@ -129,16 +131,16 @@ const OrderDetails = () => {
           <h4 className=" text-[20px]">{data?.user?.phoneNumber}</h4>
         </div>
         <div className="w-full 800px:w-[40%]">
-          <h4 className="pt-3 text-[20px]">Payment Info:</h4>
+          <h4 className="pt-3 text-[20px]">{t("checkout.paymentMethod")}:</h4>
           <h4>
-            Status:{" "}
-            {data?.paymentInfo?.status ? data?.paymentInfo?.status : "Not Paid"}
+            {t("common.status")}:{" "}
+            {data?.paymentInfo?.status ? data?.paymentInfo?.status : t("checkout.notPaid")}
           </h4>
         </div>
       </div>
       <br />
       <br />
-      <h4 className="pt-3 text-[20px] font-[600]">Order Status:</h4>
+      <h4 className="pt-3 text-[20px] font-[600]">{t("orderDetails.orderStatus")}</h4>
       {data?.status !== "Processing refund" && data?.status !== "Refund Success" && (
         <select
           value={status}
@@ -199,10 +201,11 @@ const OrderDetails = () => {
         className={`${styles.button} mt-5 !bg-[#FCE1E6] !rounded-[4px] text-[#E94560] font-[600] !h-[45px] text-[18px]`}
         onClick={data?.status !== "Processing refund" ? orderUpdateHandler : refundOrderUpdateHandler}
       >
-        Update Status
+        {t("admin.updateStatus")}
       </div>
     </div>
   );
 };
 
 export default OrderDetails;
+

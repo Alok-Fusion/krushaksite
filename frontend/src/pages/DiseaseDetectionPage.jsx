@@ -14,11 +14,16 @@ import {
   AiOutlineInfoCircle,
 } from "react-icons/ai";
 import { RiLeafLine, RiPlantLine, RiRobotLine } from "react-icons/ri";
+import { useTranslation } from "react-i18next";
 
 const DiseaseDetectionPage = () => {
+  const { i18n } = useTranslation();
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [language, setLanguage] = useState("en"); // 'en' | 'hi' | 'mr'
+  const language = ["hi", "mr"].includes(i18n.language) ? i18n.language : "en";
+  const setLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+  };
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
 

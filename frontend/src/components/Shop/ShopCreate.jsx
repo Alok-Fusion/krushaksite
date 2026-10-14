@@ -6,8 +6,10 @@ import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 import { RxAvatar } from "react-icons/rx";
+import { useTranslation } from "react-i18next";
 
 const ShopCreate = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState();
@@ -67,7 +69,7 @@ const ShopCreate = () => {
     <div className=" bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Register as a seller
+          {t("auth.sellerRegisterTitle")}
         </h2>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-[35rem]">
@@ -78,7 +80,7 @@ const ShopCreate = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Shop Name
+                {t("auth.shopNameLabel")}
               </label>
               <div className="mt-1">
                 <input
@@ -97,7 +99,7 @@ const ShopCreate = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Phone Number
+                {t("auth.phoneLabel")}
               </label>
               <div className="mt-1">
                 <input
@@ -116,7 +118,7 @@ const ShopCreate = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email address
+                {t("auth.emailLabel")}
               </label>
               <div className="mt-1">
                 <input
@@ -136,7 +138,7 @@ const ShopCreate = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Address
+                {t("auth.addressLabel")}
               </label>
               <div className="mt-1">
                 <input
@@ -155,7 +157,7 @@ const ShopCreate = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Zip Code
+                {t("auth.zipCodeLabel")}
               </label>
               <div className="mt-1">
                 <input
@@ -174,7 +176,7 @@ const ShopCreate = () => {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
-                Password
+                {t("auth.passwordLabel")}
               </label>
               <div className="mt-1 relative">
                 <input
@@ -223,7 +225,7 @@ const ShopCreate = () => {
                   htmlFor="file-input"
                   className="ml-5 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                 >
-                  <span>Upload a file</span>
+                  <span>{t("auth.uploadFile")}</span>
                   <input
                     type="file"
                     name="avatar"
@@ -240,13 +242,13 @@ const ShopCreate = () => {
                 type="submit"
                 className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >
-                Submit
+                {t("common.submit")}
               </button>
             </div>
             <div className={`${styles.noramlFlex} w-full`}>
-              <h4>Already have an account?</h4>
+              <h4>{t("auth.alreadyHaveAccount")}</h4>
               <Link to="/shop-login" className="text-blue-600 pl-2">
-                Sign in
+                {t("auth.signIn")}
               </Link>
             </div>
           </form>

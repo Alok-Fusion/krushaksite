@@ -7,8 +7,10 @@ import { useEffect } from "react";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const Checkout = () => {
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
   const [country, setCountry] = useState("");
@@ -28,7 +30,7 @@ const Checkout = () => {
 
   const paymentSubmit = () => {
    if(address1 === "" || address2 === "" || zipCode === null || country === "" || city === ""){
-      toast.error("Please choose your delivery address!")
+      toast.error(t("checkout.shippingAddress"));
    } else{
     const shippingAddress = {
       address1,
@@ -100,8 +102,6 @@ const Checkout = () => {
     ? (subTotalPrice + shipping - discountPercentenge).toFixed(2)
     : (subTotalPrice + shipping).toFixed(2);
 
-  console.log(discountPercentenge);
-
   return (
     <div className="w-full flex flex-col items-center py-8">
       <div className="w-[90%] 1000px:w-[70%] block 800px:flex">
@@ -120,6 +120,7 @@ const Checkout = () => {
             setAddress2={setAddress2}
             zipCode={zipCode}
             setZipCode={setZipCode}
+            t={t}
           />
         </div>
         <div className="w-full 800px:w-[35%] 800px:mt-0 mt-8">
@@ -131,6 +132,7 @@ const Checkout = () => {
             couponCode={couponCode}
             setCouponCode={setCouponCode}
             discountPercentenge={discountPercentenge}
+            t={t}
           />
         </div>
       </div>
@@ -138,7 +140,7 @@ const Checkout = () => {
         className={`${styles.button} w-[150px] 800px:w-[280px] mt-10`}
         onClick={paymentSubmit}
       >
-        <h5 className="text-white">Go to Payment</h5>
+        <h5 className="text-white">{t("checkout.goToPayment")}</h5>
       </div>
     </div>
   );
@@ -158,15 +160,16 @@ const ShippingInfo = ({
   setAddress2,
   zipCode,
   setZipCode,
+  t,
 }) => {
   return (
     <div className="w-full 800px:w-[95%] bg-white rounded-md p-5 pb-8">
-      <h5 className="text-[18px] font-[500]">Shipping Address</h5>
+      <h5 className="text-[18px] font-[500]">{t("checkout.shippingAddress")}</h5>
       <br />
       <form>
         <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Full Name</label>
+            <label className="block pb-2">{t("checkout.fullName")}</label>
             <input
               type="text"
               value={user && user.name}
@@ -175,7 +178,7 @@ const ShippingInfo = ({
             />
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">Email Address</label>
+            <label className="block pb-2">{t("auth.emailLabel")}</label>
             <input
               type="email"
               value={user && user.email}
@@ -187,7 +190,7 @@ const ShippingInfo = ({
 
         <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Phone Number</label>
+            <label className="block pb-2">{t("auth.phoneLabel")}</label>
             <input
               type="number"
               required
@@ -196,7 +199,7 @@ const ShippingInfo = ({
             />
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">Zip Code</label>
+            <label className="block pb-2">{t("checkout.pinCode")}</label>
             <input
               type="number"
               value={zipCode}
@@ -209,14 +212,14 @@ const ShippingInfo = ({
 
         <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Country</label>
+            <label className="block pb-2">{t("checkout.chooseCountry")}</label>
             <select
               className="w-[95%] border h-[40px] rounded-[5px]"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
             >
               <option className="block pb-2" value="">
-                Choose your country
+                {t("checkout.chooseCountry")}
               </option>
               {Country &&
                 Country.getAllCountries().map((item) => (
@@ -227,14 +230,14 @@ const ShippingInfo = ({
             </select>
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">City</label>
+            <label className="block pb-2">{t("checkout.chooseCity")}</label>
             <select
               className="w-[95%] border h-[40px] rounded-[5px]"
               value={city}
               onChange={(e) => setCity(e.target.value)}
             >
               <option className="block pb-2" value="">
-                Choose your City
+                {t("checkout.chooseCity")}
               </option>
               {State &&
                 State.getStatesOfCountry(country).map((item) => (
@@ -248,7 +251,7 @@ const ShippingInfo = ({
 
         <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Address1</label>
+            <label className="block pb-2">{t("checkout.address1")}</label>
             <input
               type="address"
               required
@@ -258,7 +261,7 @@ const ShippingInfo = ({
             />
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">Address2</label>
+            <label className="block pb-2">{t("checkout.address2")}</label>
             <input
               type="address"
               value={address2}
@@ -275,13 +278,13 @@ const ShippingInfo = ({
         className="text-[18px] cursor-pointer inline-block"
         onClick={() => setUserInfo(!userInfo)}
       >
-        Choose From saved address
+        {t("checkout.chooseSavedAddress")}
       </h5>
       {userInfo && (
         <div>
           {user &&
             user.addresses.map((item, index) => (
-              <div className="w-full flex mt-1">
+              <div className="w-full flex mt-1" key={index}>
                 <input
                   type="checkbox"
                   className="mr-3"
@@ -311,16 +314,17 @@ const CartData = ({
   couponCode,
   setCouponCode,
   discountPercentenge,
+  t,
 }) => {
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
       <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">subtotal:</h3>
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">{t("checkout.subtotal")}</h3>
         <h5 className="text-[18px] font-[600]">₹{subTotalPrice}</h5>
       </div>
       <br />
       <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">shipping:</h3>
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">{t("checkout.shipping")}</h3>
         <h5 className="text-[18px] font-[600]">₹{shipping.toFixed(2)}</h5>
       </div>
       <br />

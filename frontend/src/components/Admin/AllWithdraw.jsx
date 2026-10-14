@@ -7,12 +7,14 @@ import { BsPencil } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
 import styles from "../../styles/styles";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const AllWithdraw = () => {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [withdrawData, setWithdrawData] = useState();
-  const [withdrawStatus,setWithdrawStatus] = useState('Processing');
+  const [withdrawStatus, setWithdrawStatus] = useState("Processing");
 
   useEffect(() => {
     axios
@@ -23,56 +25,55 @@ const AllWithdraw = () => {
         setData(res.data.withdraws);
       })
       .catch((error) => {
-        console.log(error.response.data.message);
+        console.log(error.response?.data?.message);
       });
   }, []);
 
   const columns = [
-    { field: "id", headerName: "Withdraw Id", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: t("admin.withdrawId"), minWidth: 150, flex: 0.7 },
     {
       field: "name",
-      headerName: "Shop Name",
+      headerName: t("admin.shopName"),
       minWidth: 180,
       flex: 1.4,
     },
     {
       field: "shopId",
-      headerName: "Shop Id",
+      headerName: t("admin.shopId"),
       minWidth: 180,
       flex: 1.4,
     },
     {
       field: "amount",
-      headerName: "Amount",
+      headerName: t("admin.amount"),
       minWidth: 100,
       flex: 0.6,
     },
     {
       field: "status",
-      headerName: "status",
+      headerName: t("common.status"),
       type: "text",
       minWidth: 80,
       flex: 0.5,
     },
     {
       field: "createdAt",
-      headerName: "Request given at",
+      headerName: t("admin.requestGivenAt"),
       type: "number",
       minWidth: 130,
       flex: 0.6,
     },
     {
       field: " ",
-      headerName: "Update Status",
+      headerName: t("admin.updateStatus"),
       type: "number",
       minWidth: 130,
       flex: 0.6,
       renderCell: (params) => {
-
         return (
           <BsPencil
             size={20}
-            className={`${params.row.status !== "Processing" ? 'hidden' : '' } mr-5 cursor-pointer`}
+            className={`${params.row.status !== "Processing" ? "hidden" : ""} mr-5 cursor-pointer`}
             onClick={() => setOpen(true) || setWithdrawData(params.row)}
           />
         );
@@ -82,9 +83,13 @@ const AllWithdraw = () => {
 
   const handleSubmit = async () => {
     await axios
-      .put(`${server}/withdraw/update-withdraw-request/${withdrawData.id}`,{
-        sellerId: withdrawData.shopId,
-      },{withCredentials: true})
+      .put(
+        `${server}/withdraw/update-withdraw-request/${withdrawData.id}`,
+        {
+          sellerId: withdrawData.shopId,
+        },
+        { withCredentials: true }
+      )
       .then((res) => {
         toast.success("Withdraw request updated successfully!");
         setData(res.data.withdraws);
@@ -105,6 +110,7 @@ const AllWithdraw = () => {
         createdAt: item.createdAt.slice(0, 10),
       });
     });
+
   return (
     <div className="w-full flex items-center pt-5 justify-center">
       <div className="w-[95%] bg-white">
@@ -123,7 +129,7 @@ const AllWithdraw = () => {
               <RxCross1 size={25} onClick={() => setOpen(false)} />
             </div>
             <h1 className="text-[25px] text-center font-Poppins">
-              Update Withdraw status
+              {t("admin.updateWithdrawStatus")}
             </h1>
             <br />
             <select
@@ -133,14 +139,14 @@ const AllWithdraw = () => {
               className="w-[200px] h-[35px] border rounded"
             >
               <option value={withdrawStatus}>{withdrawData.status}</option>
-              <option value={withdrawStatus}>Succeed</option>
+              <option value={withdrawStatus}>{t("admin.succeed")}</option>
             </select>
             <button
               type="submit"
               className={`block ${styles.button} text-white !h-[42px] mt-4 text-[18px]`}
               onClick={handleSubmit}
             >
-              Update
+              {t("common.update")}
             </button>
           </div>
         </div>
@@ -150,3 +156,4 @@ const AllWithdraw = () => {
 };
 
 export default AllWithdraw;
+

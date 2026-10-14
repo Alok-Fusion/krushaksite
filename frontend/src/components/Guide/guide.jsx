@@ -1,8 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
+import { useTranslation } from "react-i18next";
 
-const guide = () => {
+const Guide = () => {
+    const { t } = useTranslation();
     const settings = {
         dots: true,
         infinite: true,
@@ -10,16 +12,45 @@ const guide = () => {
         slidesToShow: 3,
         slidesToScroll: 2,
         autoplay: true,
-    autoplaySpeed: 2000, 
-    prevArrow: <SampleNextArrow />,
-    nextArrow: <SamplePrevArrow />,
-      }; 
+        autoplaySpeed: 2000, 
+        prevArrow: <SampleNextArrow />,
+        nextArrow: <SamplePrevArrow />,
+    };
+
+    const guideItems = [
+      {
+        name: t("guide.farmingTips"),
+        img: "/data/my11.png",
+        path: "/guide/farmingtips"
+      },
+      {
+        name: t("guide.weather"),
+        img: "/data/my2.jpg",
+        path: "/guide/weather"
+      },
+      {
+        name: t("guide.cropInfo"),
+        img: "/data/my12.jpg",
+        path: "/guide/cropsinfo"
+      },
+      {
+        name: t("guide.seeds"),
+        img: "/data/my7.jpg",
+        path: "/guide/seeds" 
+      },
+      {
+        name: t("guide.marketNews"),
+        img: "/data/my8.jpg",
+        path:"/guide/news"
+      }
+    ];
+
  return( 
  <div  className=" w-3/4 m-auto">
     <div className=" mt-3">
     <Slider {...settings}>
-        {data.map((d)=> (
-            <div className='bg-[#65a30d] h-[400px] text-black rounded-xl'>
+        {guideItems.map((d, index)=> (
+            <div className='bg-[#65a30d] h-[400px] text-black rounded-xl' key={index}>
                 <div className='h-56 rounded-t-xl bg-indigo-500 flex justify-center items-center'>
                     <img src={d.img} alt=""  className='h-44 w-44 rounded-full'/>
                 </div>
@@ -28,7 +59,7 @@ const guide = () => {
                <br/>
                <Link to={d.path}>
                <div className='flex justify-center'>
-               <button className='bg-indigo-500 text-white text-lg px-6 py-1 rounded-xl '>Read more</button>
+               <button className='bg-indigo-500 text-white text-lg px-6 py-1 rounded-xl '>{t("common.readMore")}</button>
                </div>
                </Link>
                </div>
@@ -41,8 +72,6 @@ const guide = () => {
  </div>
  );
 }
-
-
 
 function SampleNextArrow(props) {
     const { className, style, onClick } = props;
@@ -65,34 +94,5 @@ function SampleNextArrow(props) {
       />
     );
   }
-  
- 
 
-const data = [
-   {
-    name: "Farming tips",
-    img: "/data/my11.png",
-    path: "/guide/farmingtips"
-   },
-   {
-    name: "Weather",
-    img: "/data/my2.jpg",
-    path: "/guide/weather"
-   },
-   {
-    name: "Crops Information",
-    img: "/data/my12.jpg",
-    path: "/guide/cropsinfo"
-   },
-   {
-    name: "Seeds & Fertilizers Information",
-    img: "/data/my7.jpg",
-    path: "/guide/seeds" 
-   },
-   {
-    name: "News",
-    img: "/data/my8.jpg",
-    path:"/guide/news"
-   }
-]
-export default guide
+export default Guide;

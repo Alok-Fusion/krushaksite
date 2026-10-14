@@ -9,8 +9,10 @@ import { server } from "../../server";
 import Loader from "../Layout/Loader";
 import styles from "../../styles/styles";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const AllLand = () => {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -48,34 +50,34 @@ const AllLand = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "Land ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: t("admin.landId"), minWidth: 150, flex: 0.7 },
     {
       field: "name",
-      headerName: "Name",
+      headerName: t("admin.name"),
       minWidth: 130,
       flex: 0.8,
     },
     {
       field: "price",
-      headerName: "Price",
+      headerName: t("admin.price"),
       minWidth: 100,
       flex: 0.6,
     },
     {
       field: "landlocation",
-      headerName: "Location",
+      headerName: t("admin.location"),
       minWidth: 140,
       flex: 1.2,
     },
     {
       field: "area",
-      headerName: "Area",
+      headerName: t("admin.area"),
       minWidth: 90,
       flex: 0.6,
     },
     {
       field: "status",
-      headerName: "Status",
+      headerName: t("admin.status"),
       minWidth: 100,
       flex: 0.6,
     },
@@ -83,7 +85,7 @@ const AllLand = () => {
       field: "Preview",
       flex: 0.6,
       minWidth: 90,
-      headerName: "Preview",
+      headerName: t("common.preview"),
       sortable: false,
       renderCell: (params) => {
         return (
@@ -99,7 +101,7 @@ const AllLand = () => {
       field: "Delete",
       flex: 0.6,
       minWidth: 90,
-      headerName: "Delete",
+      headerName: t("common.delete"),
       sortable: false,
       renderCell: (params) => {
         return (
@@ -134,7 +136,7 @@ const AllLand = () => {
     <div className="w-full flex justify-center pt-5">
       <div className="w-[97%]">
         <h3 className="text-[22px] font-Poppins pb-2 font-[600] text-[#333]">
-          All Land Listings
+          {t("admin.allLandListings")}
         </h3>
         {isLoading ? (
           <Loader />
@@ -157,14 +159,14 @@ const AllLand = () => {
                 <RxCross1 size={25} onClick={() => setOpen(false)} />
               </div>
               <h3 className="text-[22px] text-center py-5 font-Poppins text-[#000000cb]">
-                Are you sure you want to delete this land listing?
+                {t("admin.deleteLandConfirm")}
               </h3>
               <div className="w-full flex items-center justify-center">
                 <div
                   className={`${styles.button} text-white text-[16px] !h-[42px] mr-4 cursor-pointer`}
                   onClick={() => setOpen(false)}
                 >
-                  Cancel
+                  {t("common.cancel")}
                 </div>
                 <div
                   className={`${styles.button} text-white text-[16px] !h-[42px] ml-4 cursor-pointer !bg-red-600 hover:!bg-red-700`}
@@ -173,7 +175,7 @@ const AllLand = () => {
                     handleDelete(landId);
                   }}
                 >
-                  Confirm
+                  {t("common.confirm")}
                 </div>
               </div>
             </div>

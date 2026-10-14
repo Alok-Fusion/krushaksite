@@ -10,8 +10,10 @@ import MiltesImage from '../Assests/milets.jpg'
 import  RabiImage from '../Assests/rabi.jpg'
 import KharibImage from '../Assests/kharib.jpg'
 import seedsImage from "../Assests/page.jpg"
+import { useTranslation } from "react-i18next";
 
 const CropsinfoPage  = () => {
+  const { t } = useTranslation();
   const cropsData = [
     {
       title: 'Wheat / गेहूं ',
@@ -69,7 +71,7 @@ const CropsinfoPage  = () => {
         <Header/>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-4xl font-extrabold " style={{ color: "#422006"}}>
-          Crops Information
+          {t("guide.cropsHeading")}
         </h2>
       </div>
       <div className={`flex min-h-[80vh] 800px:min-h-[35vh]  w-full  ${styles.noramlFlex}`}>

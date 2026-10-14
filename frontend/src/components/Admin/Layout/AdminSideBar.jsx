@@ -8,8 +8,10 @@ import { HiOutlineUserGroup } from "react-icons/hi";
 import { BsHandbag } from "react-icons/bs";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { AiOutlineSetting } from "react-icons/ai";
+import { useTranslation } from "react-i18next";
 
 const AdminSideBar = ({ active }) => {
+  const { t } = useTranslation();
   return (
     <div
       className="h-[100vh] bg-white shadow-sm overflow-y-scroll"
@@ -33,7 +35,7 @@ const AdminSideBar = ({ active }) => {
               active === 1 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
-            Dashboard
+            {t("admin.dashboard")}
           </h5>
         </Link>
       </div>
@@ -49,7 +51,7 @@ const AdminSideBar = ({ active }) => {
               active === 2 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
-            All Orders
+            {t("admin.allOrders")}
           </h5>
         </Link>
       </div>
@@ -65,7 +67,7 @@ const AdminSideBar = ({ active }) => {
               active === 3 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
-            All Sellers
+            {t("admin.allSellers")}
           </h5>
         </Link>
       </div>
@@ -81,7 +83,7 @@ const AdminSideBar = ({ active }) => {
               active === 4 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
-            All Users
+            {t("admin.allUsers")}
           </h5>
         </Link>
       </div>
@@ -97,7 +99,7 @@ const AdminSideBar = ({ active }) => {
               active === 5 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
-            All Products
+            {t("admin.allProducts")}
           </h5>
         </Link>
       </div>
@@ -113,7 +115,7 @@ const AdminSideBar = ({ active }) => {
               active === 6 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
-            All Lands
+            {t("admin.allLands")}
           </h5>
         </Link>
       </div>
@@ -129,7 +131,7 @@ const AdminSideBar = ({ active }) => {
               active === 8 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
-            Withdraw Request
+            {t("admin.allWithdraw")}
           </h5>
         </Link>
       </div>
@@ -138,14 +140,14 @@ const AdminSideBar = ({ active }) => {
         <Link to="/profile" className="w-full flex items-center">
           <AiOutlineSetting
             size={30}
-            color={`${active === 9 ? "crimson" : "#555"}`}
+            color={`${active === 11 ? "crimson" : "#555"}`}
           />
           <h5
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 9 ? "text-[crimson]" : "text-[#555]"
+              active === 11 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
-            Settings
+            {t("shop.settings")}
           </h5>
         </Link>
       </div>

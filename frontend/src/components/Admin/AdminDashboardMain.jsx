@@ -11,8 +11,10 @@ import { getAllSellers } from "../../redux/actions/sellers";
 import { getAllUsers } from "../../redux/actions/user";
 import AdminTotalSales from "./AdminTotalSales";
 import AdminChart from "./AdminChart";
+import { useTranslation } from "react-i18next";
 
 const AdminDashboardMain = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   // Redux state selectors
@@ -33,10 +35,10 @@ const AdminDashboardMain = () => {
 
   // DataGrid columns definition
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: t("admin.orderId"), minWidth: 150, flex: 0.7 },
     {
       field: "status",
-      headerName: "Status",
+      headerName: t("common.status"),
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) =>
@@ -44,21 +46,21 @@ const AdminDashboardMain = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: t("cart.quantity"),
       type: "number",
       minWidth: 130,
       flex: 0.7,
     },
     {
       field: "total",
-      headerName: "Total",
+      headerName: t("checkout.totalPayable"),
       type: "number",
       minWidth: 130,
       flex: 0.8,
     },
     {
       field: "createdAt",
-      headerName: "Order Date",
+      headerName: t("orderDetails.placedOn"),
       type: "number",
       minWidth: 130,
       flex: 0.8,
@@ -80,13 +82,13 @@ const AdminDashboardMain = () => {
         <Loader />
       ) : (
         <div className="w-full p-4">
-          <h3 className="text-[22px] font-Poppins pb-2">Overview</h3>
+          <h3 className="text-[22px] font-Poppins pb-2">{t("shop.overview")}</h3>
           <div className="w-full block 800px:flex items-center justify-between">
             <div className="w-full mb-4 800px:w-[22%] min-h-[20vh] bg-white shadow rounded px-1 py-2">
               <div className="flex items-center">
                 <AiOutlineMoneyCollect size={30} className="mr-2" fill="#00000085" />
                 <h3 className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}>
-                  Total Earning
+                  {t("admin.totalRevenue")}
                 </h3>
               </div>
               <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">₹ {adminBalance}</h5>
@@ -96,12 +98,12 @@ const AdminDashboardMain = () => {
               <div className="flex items-center">
                 <MdBorderClear size={30} className="mr-2" fill="#00000085" />
                 <h3 className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}>
-                  All Sellers
+                  {t("admin.allSellers")}
                 </h3>
               </div>
               <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">{sellers?.length || 0}</h5>
               <Link to="/admin-sellers">
-                <h5 className="pt-4 pl-2 text-[#077f9c]">View Sellers</h5>
+                <h5 className="pt-4 pl-2 text-[#077f9c]">{t("admin.allSellers")}</h5>
               </Link>
             </div>
 
@@ -109,12 +111,12 @@ const AdminDashboardMain = () => {
               <div className="flex items-center">
                 <MdBorderClear size={30} className="mr-2" fill="#00000085" />
                 <h3 className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}>
-                  All Users
+                  {t("admin.allUsers")}
                 </h3>
               </div>
               <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">{users?.length || 0}</h5>
               <Link to="/admin-users">
-                <h5 className="pt-4 pl-2 text-[#077f9c]">View Users</h5>
+                <h5 className="pt-4 pl-2 text-[#077f9c]">{t("admin.allUsers")}</h5>
               </Link>
             </div>
 
@@ -122,12 +124,12 @@ const AdminDashboardMain = () => {
               <div className="flex items-center">
                 <AiOutlineMoneyCollect size={30} className="mr-2" fill="#00000085" />
                 <h3 className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}>
-                  All Orders
+                  {t("admin.allOrders")}
                 </h3>
               </div>
               <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">{adminOrders?.length || 0}</h5>
               <Link to="/admin-orders">
-                <h5 className="pt-4 pl-2 text-[#077f9c]">View Orders</h5>
+                <h5 className="pt-4 pl-2 text-[#077f9c]">{t("admin.allOrders")}</h5>
               </Link>
             </div>
           </div>
@@ -143,7 +145,7 @@ const AdminDashboardMain = () => {
           </div>
 
           <br />
-          <h3 className="text-[22px] font-Poppins pb-2">Latest Orders</h3>
+          <h3 className="text-[22px] font-Poppins pb-2">{t("admin.allOrders")}</h3>
           <div className="w-full min-h-[45vh] bg-white rounded">
             <DataGrid
               rows={rows}

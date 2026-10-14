@@ -7,7 +7,10 @@ import fertilizerImage from "../../Assests/fertilizer.jpg";
 import localVideo from '../../Assests/istockphoto-1478542045-640_adpp_is.mp4';  // Replace with the path to your downloaded video
 import Fade from 'react-reveal/Fade';
 import Bounce from 'react-reveal/Bounce'
+import { useTranslation } from "react-i18next";
+
 const Seeds = () => {
+  const { t } = useTranslation();
   return (
     <div className="container mx-auto">
       <div className={`flex min-h-[50vh] my-4 mx-6  ${styles.noramlFlex}`}>
@@ -29,21 +32,21 @@ const Seeds = () => {
       <Fade top distance='10%' duration={5000} forever>
       <div className="container mx-auto">
       <h2 className="mt-3 text-center text-4xl font-extrabold  "style={{ color: "#009900" }}>
-        "Stop chemical, harvest natural" </h2></div> </Fade>
+        {t("guide.stopChemicalHarvestNatural")} </h2></div> </Fade>
         
         <div className='p-8'>
         <p className="text-lg font-bold " style={{ color: "#009900", fontStyle: 'italic', float: 'left', width: '50%'}}>
-        <h1 className='text-2xl font-semibold  underline underline-offset-8 '>Here are some tips for using fertilizers:</h1>
+        <h1 className='text-2xl font-semibold  underline underline-offset-8 '>{t("guide.fertilizerTipsHeading")}</h1>
         <br/>
-When to apply : <br/>
+{t("guide.whenToApply")} <br/>
 Apply fertilizer during planting, 1–2 inches below or below and to the side of the seed row. In cool, wet areas, you can apply a starter application in a subsurface band to boost seedling growth.
        <br/> 
        <br/>
-How to apply : <br/>
+{t("guide.howToApply")} <br/>
 Apply fertilizer around the base of the plant, extending to the drip line. For vegetables, place the fertilizer in a strip parallel to the planting row.
       <br/>
       <br/>
-Application methods : <br/>
+{t("guide.applicationMethods")} <br/>
 There are four main types of fertilizer application methods: broadcasting, foliar, placement, and fertigation. 
 
         </p>
@@ -57,7 +60,7 @@ There are four main types of fertilizer application methods: broadcasting, folia
       </div>
       <br/>
      
-      <div className=' sm:mx-auto sm:w-full sm:max-w-md  '> <Bounce middle distance='10%' duration={5000} forever> <h2 className=" text-center p-4 text-3xl font-extrabold "style={{ color: "#009900"  }}>Choose Seeds or Fertilizers </h2> </Bounce> </div>
+      <div className=' sm:mx-auto sm:w-full sm:max-w-md  '> <Bounce middle distance='10%' duration={5000} forever> <h2 className=" text-center p-4 text-3xl font-extrabold "style={{ color: "#009900"  }}>{t("guide.chooseSeedsOrFertilizers")}</h2> </Bounce> </div>
       
       
      <div>
@@ -71,7 +74,7 @@ There are four main types of fertilizer application methods: broadcasting, folia
           />
           {/* Text overlay */}
             <div className="absolute top-0 left-0 right-0 bottom-0 text-center opacity-10 group-hover:opacity-100 transition-opacity">
-              <p className="text-white w-full h-full text-3xl font-extrabold bg-black p-4 opacity-40">Seeds</p>
+              <p className="text-white w-full h-full text-3xl font-extrabold bg-black p-4 opacity-40">{t("guide.seeds")}</p>
             </div>
           </div>
           </Link>
@@ -85,7 +88,7 @@ There are four main types of fertilizer application methods: broadcasting, folia
           />
           {/* Text overlay */}
             <div className="absolute top-0 left-0 right-0 bottom-0 text-center opacity-10 group-hover:opacity-100 transition-opacity">
-              <p className="text-white w-full h-full text-3xl  font-extrabold bg-black p-4 opacity-40">Fertilizers</p>
+              <p className="text-white w-full h-full text-3xl  font-extrabold bg-black p-4 opacity-40">{t("guide.fertilizer")}</p>
             </div>
           </div>
           </Link>

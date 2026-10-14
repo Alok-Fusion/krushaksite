@@ -10,7 +10,10 @@ import NPKImage from '../Assests/npk.jpg'
 import  AaImage from '../Assests/aa1.jpg'
 import OrganicImage from '../Assests/of.jpeg'
 import seedsImage from "../Assests/page.jpg"
+import { useTranslation } from "react-i18next";
+
 const KhadPage = () => {
+    const { t } = useTranslation();
     const khadData = [
         {
             title: 'Urea (46-0-0) / यूरिया 46-0-0 ',
@@ -68,7 +71,7 @@ const KhadPage = () => {
         <Header/>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-4xl font-extrabold " style={{color:"#422006"}}>
-          FERTILIZERS INFORMATION
+          {t("guide.fertilizersHeading")}
         </h2>
       </div>
       

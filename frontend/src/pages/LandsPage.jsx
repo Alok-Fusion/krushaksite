@@ -7,8 +7,10 @@ import LandsCard from "../components/Route/LandsCard/LandsCard";
 import styles from "../styles/styles";
 import { getAllLands } from "../redux/actions/lands";
 import { AiOutlineSearch } from "react-icons/ai";
+import { useTranslation } from "react-i18next";
 
 const LandsPage = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { allLands, isLoading, pagination } = useSelector((state) => state.lands);
 
@@ -74,7 +76,7 @@ const LandsPage = () => {
             <div className="relative flex-1">
               <input
                 type="text"
-                placeholder="Search lands by name, title, address..."
+                placeholder={t("lands.searchPlaceholder")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
@@ -89,7 +91,7 @@ const LandsPage = () => {
             <div className="w-full md:w-52">
               <input
                 type="text"
-                placeholder="Location (city/state)"
+                placeholder={t("lands.locationPlaceholder")}
                 value={locationTerm}
                 onChange={(e) => setLocationTerm(e.target.value)}
                 className="w-full py-2 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -106,10 +108,10 @@ const LandsPage = () => {
                 }}
                 className="w-full py-2 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
               >
-                <option value="All">All Statuses</option>
-                <option value="Available">Available</option>
-                <option value="Leased">Leased</option>
-                <option value="Sold">Sold</option>
+                <option value="All">{t("lands.allStatuses")}</option>
+                <option value="Available">{t("lands.statusAvailable")}</option>
+                <option value="Leased">{t("lands.statusLeased")}</option>
+                <option value="Sold">{t("lands.statusSold")}</option>
               </select>
             </div>
 
@@ -117,7 +119,7 @@ const LandsPage = () => {
             <div className="w-full md:w-40">
               <input
                 type="number"
-                placeholder="Max Price (₹)"
+                placeholder={t("products.maxPrice")}
                 value={maxPrice}
                 onChange={(e) => {
                   setMaxPrice(e.target.value);
@@ -133,14 +135,14 @@ const LandsPage = () => {
                 type="submit"
                 className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md text-sm font-medium transition"
               >
-                Filter
+                {t("common.filter")}
               </button>
               <button
                 type="button"
                 onClick={handleResetFilters}
                 className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm font-medium transition"
               >
-                Reset
+                {t("common.reset")}
               </button>
             </div>
           </form>
@@ -160,12 +162,12 @@ const LandsPage = () => {
 
             {(!allLands || allLands.length === 0) && (
               <div className="text-center w-full py-16 bg-white rounded-lg shadow-sm border border-gray-100 mb-8">
-                <p className="text-gray-500 text-lg">No agricultural lands match your criteria.</p>
+                <p className="text-gray-500 text-lg">{t("lands.noLandsFound")}</p>
                 <button
                   onClick={handleResetFilters}
                   className="mt-4 text-green-600 font-semibold hover:underline"
                 >
-                  Clear all filters
+                  {t("common.clearFilters")}
                 </button>
               </div>
             )}
@@ -185,7 +187,7 @@ const LandsPage = () => {
                       : "bg-white text-gray-700 hover:bg-gray-50"
                   }`}
                 >
-                  Previous
+                  {t("common.prev")}
                 </button>
 
                 <div className="flex items-center gap-1">
@@ -219,7 +221,7 @@ const LandsPage = () => {
                       : "bg-white text-gray-700 hover:bg-gray-50"
                   }`}
                 >
-                  Next
+                  {t("common.next")}
                 </button>
               </div>
             )}

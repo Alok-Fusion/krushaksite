@@ -3,6 +3,7 @@ import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
 import Lottie from "react-lottie";
 import animationData from "../Assests/animations/107043-success.json";
+import { useTranslation } from "react-i18next";
 
 const OrderSuccessPage = () => {
   return (
@@ -15,6 +16,7 @@ const OrderSuccessPage = () => {
 };
 
 const Success = () => {
+  const { t } = useTranslation();
   const defaultOptions = {
     loop: false,
     autoplay: true,
@@ -27,7 +29,7 @@ const Success = () => {
     <div>
       <Lottie options={defaultOptions} width={300} height={300} />
       <h5 className="text-center mb-14 text-[25px] text-[#000000a1]">
-        Your order is successful 😍
+        {t("checkout.orderSuccess")}
       </h5>
       <br />
       <br />

@@ -2,7 +2,10 @@ import React from 'react'
 import { Link } from "react-router-dom";
 import Fade from 'react-reveal/Fade';
 import Flip from 'react-reveal/Flip';
+import { useTranslation } from "react-i18next";
+
 const Khadpg = ({khadji}) => {
+  const { t } = useTranslation();
   return (
     <div>
     {khadji.map((tip, index) => (
@@ -19,7 +22,7 @@ const Khadpg = ({khadji}) => {
           <Link to={tip.LinkUrl} className="inline-block">
           <div className='w-[200px] bg-transparent  h-[10px]  flex items-center justify-center rounded-[10px] cursor-pointer'>
                <span className="text-[#FF0000] font-[italic] text-[18px] font-extrabold">
-                  Click to watch Video...
+                  {t("guide.watchVideo")}
                </span>
           </div>
         </Link>

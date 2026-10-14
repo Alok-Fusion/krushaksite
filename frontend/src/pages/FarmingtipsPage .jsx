@@ -6,8 +6,10 @@ import Farmingtips from "../components/Guide/farmingtips.jsx";
 import farmersImage from '../Assests/harvest.jpg';
 import irrigateImage from '../Assests/irrigate.jpg';
 import seedsImage from "../Assests/page.jpg"
+import { useTranslation } from "react-i18next";
 //import Bounce from 'react-reveal/Bounce'
 const FarmingtipsPage  = () => {
+  const { t } = useTranslation();
   // Sample data for farming tips
   const farmingTipsData = [
     {
@@ -34,7 +36,7 @@ const FarmingtipsPage  = () => {
         <Header/>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-4xl font-extrabold " style={{color : "#422006"}}>
-          Farming Tips for Farmers
+          {t("guide.farmingTipsHeading")}
         </h2>
       </div>
   

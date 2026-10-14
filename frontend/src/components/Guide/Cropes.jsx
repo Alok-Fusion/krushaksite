@@ -2,7 +2,10 @@ import React from 'react'
 import { Link } from "react-router-dom";
 import Fade from 'react-reveal/Fade';
 import Flip from 'react-reveal/Flip';
+import { useTranslation } from "react-i18next";
+
 const Cropes = ({crops}) => {
+   const { t } = useTranslation();
    return (
    <div>  {/* Map through farming tips data and render each topic */}
     {crops.map((tip, index) => (
@@ -19,7 +22,7 @@ const Cropes = ({crops}) => {
           <Link to={tip.LinkUrl} className="inline-block">
           <div className='w-[110px] bg-transparent  h-[10px]  flex items-center justify-center rounded-[10px] cursor-pointer'>
                <span className="text-[#000000] font-[italic] text-[18px] font-extrabold">
-                  Read more...
+                  {t("common.readMore")}
                </span>
           </div>
         </Link>

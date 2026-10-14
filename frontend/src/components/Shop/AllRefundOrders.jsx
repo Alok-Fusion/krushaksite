@@ -6,8 +6,10 @@ import { Link } from "react-router-dom";
 import Loader from "../Layout/Loader";
 import { getAllOrdersOfShop } from "../../redux/actions/order";
 import { AiOutlineArrowRight } from "react-icons/ai";
+import { useTranslation } from "react-i18next";
 
 const AllRefundOrders = () => {
+  const { t } = useTranslation();
   const { orders, isLoading } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
 
@@ -22,11 +24,11 @@ const AllRefundOrders = () => {
   const refundOrders = orders && orders.filter((item) => item.status === "Processing refund"  || item.status === "Refund Success");
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: t("admin.orderId"), minWidth: 150, flex: 0.7 },
 
     {
       field: "status",
-      headerName: "Status",
+      headerName: t("common.status"),
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
@@ -37,7 +39,7 @@ const AllRefundOrders = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: t("admin.itemsQty"),
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -45,7 +47,7 @@ const AllRefundOrders = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: t("admin.total"),
       type: "number",
       minWidth: 130,
       flex: 0.8,

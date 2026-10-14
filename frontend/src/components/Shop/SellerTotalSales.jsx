@@ -18,6 +18,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useSelector } from 'react-redux';
 import { server } from '../../server';
+import { useTranslation } from 'react-i18next';
 
 ChartJS.register(
   CategoryScale,
@@ -31,6 +32,7 @@ ChartJS.register(
 );
 
 const SellerTotalSales = () => {
+  const { t } = useTranslation();
   const [orders, setOrders] = useState([]); // Ensure it's an array by default
   const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState(null);
@@ -141,19 +143,19 @@ const SellerTotalSales = () => {
 
   return (
     <div style={containerStyle}>
-      <h2 style={headingStyle}>Total Sales</h2>
+      <h2 style={headingStyle}>{t("shop.totalSales")}</h2>
 
       <div style={datePickerStyle}>
-        <label>Start Date: </label>
+        <label>{t("shop.startDate")} </label>
         <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
-        <label style={{ marginTop: getScreenWidth() < 600 ? '10px' : '0' }}>End Date: </label>
+        <label style={{ marginTop: getScreenWidth() < 600 ? '10px' : '0' }}>{t("shop.endDate")} </label>
         <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} />
       </div>
 
       <div style={datePickerStyle}>
-        <label>Select Month: </label>
+        <label>{t("shop.filterByMonth")}: </label>
         <select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)} style={selectStyle}>
-          <option value="">All Months</option>
+          <option value="">{t("shop.allMonths")}</option>
           {uniqueMonths.map((month, index) => (
             <option key={index} value={month}>{month}</option>
           ))}
@@ -161,7 +163,7 @@ const SellerTotalSales = () => {
       </div>
 
       {loading ? (
-        <p>Loading...</p>
+        <p>{t("common.loading")}</p>
       ) : (
         <div style={chartStyle}>
           <Line 
@@ -185,3 +187,4 @@ const SellerTotalSales = () => {
 }
 
 export default SellerTotalSales;
+

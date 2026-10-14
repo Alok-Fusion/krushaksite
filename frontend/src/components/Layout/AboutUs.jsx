@@ -1,15 +1,17 @@
 import React from "react";
 import styles from "../../styles/styles";
+import { useTranslation } from "react-i18next";
 
 const AboutUs = () => {
+  const { t } = useTranslation();
   return (
     <>
       <div className="font-Poppins text-blue-900 font-semibold text-[4vw] w-11/12 mx-auto text-center">
-        About Us
+        {t("about.title")}
       </div>
       <div className={`${styles.section} bg-yellow-100 p-4 sm:p-6 md:p-8`}>
         <h2 className="text-3xl sm:text-4xl font-bold text-center font-Poppins underline decoration-wavy">
-          Our Team
+          {t("about.ourTeam")}
         </h2>
         <br />
         <div className="flex justify-center">
@@ -22,17 +24,13 @@ const AboutUs = () => {
         <br />
         <div className="text-center">
           <p className="font-Poppins font-medium text-[16px] sm:text-[19px] text-[#3b3a3a] mx-auto leading-[1.8rem] px-4 sm:px-6 md:px-8">
-            Welcome to Krushak! We're thrilled to have you here and excited to
-            introduce the incredible team behind the scenes. At Krushak, we
-            believe in the power of collaboration, creativity, and innovation.
-            Our dedicated team is composed of talented individuals who share a
-            passion for the purpose of the website.
+            {t("about.welcomeText")}
           </p>
         </div>
         <br />
         <br />
         <p className="text-center font-Poppins font-semibold text-2xl sm:text-3xl">
-          Meet the minds that bring Krushak to life:
+          {t("about.meetMinds")}
         </p>
         <br />
         <div className="flex flex-col md:flex-row justify-between items-center">
@@ -70,7 +68,7 @@ const AboutUs = () => {
         <div className={`${styles.section} bg-[#dcebafc2] p-4 sm:p-6 md:p-8`}>
           <br />
           <p className="text-center font-Poppins font-semibold text-2xl sm:text-3xl">
-            Our Goals
+            {t("about.ourGoals")}
           </p>
           <br />
           <div className="flex justify-center">
@@ -82,22 +80,22 @@ const AboutUs = () => {
           </div>
           <br />
           <p className="text-center font-Poppins font-medium text-[18px] sm:text-[22px] text-[#3b3a3a] mx-auto leading-[1.8rem] px-4 sm:px-6 md:px-8">
-            Provide the Farmers right price for their products.
+            {t("about.subGoal")}
           </p>
           <p className="font-Poppins font-semibold text-[18px] sm:text-[22px] text-[#3b3a3a] mx-auto px-4 sm:px-6 md:px-8">
-            Objectives:
+            {t("about.objectives")}
           </p>
           <p className="font-Poppins font-medium text-[16px] sm:text-[19px] text-[#3b3a3a] mx-auto px-4 sm:px-6 md:px-8 leading-[1.8rem]">
-            ◎ Provide right price for farmers products.
+            {t("about.obj1")}
           </p>
           <p className="font-Poppins font-medium text-[16px] sm:text-[19px] text-[#3b3a3a] mx-auto px-4 sm:px-6 md:px-8 leading-[1.8rem]">
-            ◎ Provide buyers good quality products.
+            {t("about.obj2")}
           </p>
           <p className="font-Poppins font-medium text-[16px] sm:text-[19px] text-[#3b3a3a] mx-auto px-4 sm:px-6 md:px-8 leading-[1.8rem]">
-            ◎ Help farmers to learn new farming technologies.
+            {t("about.obj3")}
           </p>
           <p className="font-Poppins font-medium text-[16px] sm:text-[19px] text-[#3b3a3a] mx-auto px-4 sm:px-6 md:px-8 leading-[1.8rem]">
-            ◎ User friendly Interface.
+            {t("about.obj4")}
           </p>
         </div>
       </div>

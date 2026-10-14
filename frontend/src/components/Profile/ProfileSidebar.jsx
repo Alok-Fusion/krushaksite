@@ -14,10 +14,12 @@ import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const ProfileSidebar = ({ setActive, active }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
- const {user} = useSelector((state) => state.user);
+  const {user} = useSelector((state) => state.user);
   const logoutHandler = () => {
     axios
       .get(`${server}/user/logout`, { withCredentials: true })
@@ -42,7 +44,7 @@ const ProfileSidebar = ({ setActive, active }) => {
             active === 1 ? "text-[red]" : ""
           } 800px:block hidden`}
         >
-          Profile
+          {t("profile.profile")}
         </span>
       </div>
       <div
@@ -55,7 +57,7 @@ const ProfileSidebar = ({ setActive, active }) => {
             active === 2 ? "text-[red]" : ""
           } 800px:block hidden`}
         >
-          Orders
+          {t("profile.orders")}
         </span>
       </div>
       <div
@@ -68,7 +70,7 @@ const ProfileSidebar = ({ setActive, active }) => {
             active === 3 ? "text-[red]" : ""
           } 800px:block hidden`}
         >
-          Refunds
+          {t("profile.refunds")}
         </span>
       </div>
 
@@ -82,7 +84,7 @@ const ProfileSidebar = ({ setActive, active }) => {
             active === 4 ? "text-[red]" : ""
           } 800px:block hidden`}
         >
-          Inbox
+          {t("profile.inbox")}
         </span>
       </div>
 
@@ -96,7 +98,7 @@ const ProfileSidebar = ({ setActive, active }) => {
             active === 5 ? "text-[red]" : ""
           } 800px:block hidden`}
         >
-          Track Order
+          {t("profile.trackOrder")}
         </span>
       </div>
 
@@ -110,7 +112,7 @@ const ProfileSidebar = ({ setActive, active }) => {
             active === 6 ? "text-[red]" : ""
           } 800px:block hidden`}
         >
-          Change Password
+          {t("profile.changePassword")}
         </span>
       </div>
 
@@ -124,7 +126,7 @@ const ProfileSidebar = ({ setActive, active }) => {
             active === 7 ? "text-[red]" : ""
           } 800px:block hidden`}
         >
-          Address
+          {t("profile.address")}
         </span>
       </div>
 
@@ -143,7 +145,7 @@ const ProfileSidebar = ({ setActive, active }) => {
                 active === 8 ? "text-[red]" : ""
               } 800px:block hidden`}
             >
-              Admin Dashboard
+              {t("profile.adminDashboard")}
             </span>
           </div>
         </Link>
@@ -158,7 +160,7 @@ const ProfileSidebar = ({ setActive, active }) => {
             active === 8 ? "text-[red]" : ""
           } 800px:block hidden`}
         >
-          Log out
+          {t("profile.logOut")}
         </span>
       </div>
     </div>

@@ -4,13 +4,16 @@ import Header from "../components/Layout/Header";
 import styles from "../styles/styles";
 import Seeds from "../components/Guide/seeds.jsx";
 import seedsImage from "../Assests/page.jpg"
+import { useTranslation } from "react-i18next";
+
 const SeedsPage  = () => {
+  const { t } = useTranslation();
   return (
     <div>
         <Header/>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-4xl font-extrabold  "style={{ color: "#422006" }}>
-          Seeds and Fertilizers 
+          {t("guide.seedsAndFertilizers")} 
         </h2>
         </div>
         <div className={`flex min-h-[80vh] 800px:min-h-[35vh]  w-full  ${styles.noramlFlex}`}>

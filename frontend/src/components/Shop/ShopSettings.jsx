@@ -6,8 +6,10 @@ import styles from "../../styles/styles";
 import axios from "axios";
 import { loadSeller } from "../../redux/actions/user";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const ShopSettings = () => {
+  const { t } = useTranslation();
   const { seller } = useSelector((state) => state.seller);
   const [avatar, setAvatar] = useState();
   const [name, setName] = useState(seller && seller.name);
@@ -103,7 +105,7 @@ const ShopSettings = () => {
         >
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Name</label>
+              <label className="block pb-2">{t("shop.shopName")}</label>
             </div>
             <input
               type="name"
@@ -116,14 +118,14 @@ const ShopSettings = () => {
           </div>
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop description</label>
+              <label className="block pb-2">{t("shop.shopDescription")}</label>
             </div>
             <input
               type="name"
               placeholder={`${
                 seller?.description
                   ? seller.description
-                  : "Enter your shop description"
+                  : t("shop.enterProductDesc")
               }`}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -132,7 +134,7 @@ const ShopSettings = () => {
           </div>
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Address</label>
+              <label className="block pb-2">{t("shop.shopAddress")}</label>
             </div>
             <input
               type="name"
@@ -146,7 +148,7 @@ const ShopSettings = () => {
 
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Phone Number</label>
+              <label className="block pb-2">{t("shop.shopPhoneNumber")}</label>
             </div>
             <input
               type="number"
@@ -160,7 +162,7 @@ const ShopSettings = () => {
 
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Zip Code</label>
+              <label className="block pb-2">{t("shop.shopZipCode")}</label>
             </div>
             <input
               type="number"
@@ -175,8 +177,8 @@ const ShopSettings = () => {
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <input
               type="submit"
-              value="Update Shop"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              value={t("shop.updateShop")}
+              className={`${styles.input} !w-[95%] mb-4 800px:mb-0 cursor-pointer`}
               required
               readOnly
             />
@@ -188,3 +190,4 @@ const ShopSettings = () => {
 };
 
 export default ShopSettings;
+

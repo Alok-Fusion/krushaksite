@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { server } from "../../server";
+import { useTranslation } from "react-i18next";
 
 const CountDown = ({ data }) => {
+  const { t } = useTranslation();
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
@@ -37,14 +39,21 @@ const CountDown = ({ data }) => {
     return timeLeft;
   }
 
+  const intervalLabels = {
+    days: t("events.days"),
+    hours: t("events.hours"),
+    minutes: t("events.minutes"),
+    seconds: t("events.seconds"),
+  };
+
   const timerComponents = Object.keys(timeLeft).map((interval) => {
     if (!timeLeft[interval]) {
       return null;
     }
 
     return (
-      <span className="text-[25px] text-[#475ad2]">
-        {timeLeft[interval]} {interval}{" "}
+      <span className="text-[25px] text-[#475ad2]" key={interval}>
+        {timeLeft[interval]} {intervalLabels[interval] || interval}{" "}
       </span>
     );
   });

@@ -9,8 +9,23 @@ import styles from "../styles/styles";
 import { getAllProducts } from "../redux/actions/product";
 import { categoriesData } from "../static/data";
 import { AiOutlineSearch } from "react-icons/ai";
+import { useTranslation } from "react-i18next";
+
+const categoryKeyMap = {
+  "Pulses": "categories.pulses",
+  "Vegetables": "categories.vegetables",
+  "Spices": "categories.spices",
+  "Flowers": "categories.flowers",
+  "Dairy": "categories.dairy",
+  "Animal based": "categories.animalBased",
+  "Crops": "categories.crops",
+  "Crops Fertilizers": "categories.cropsFertilizers",
+  "Seeds": "categories.seeds",
+  "others": "categories.others",
+};
 
 const ProductsPage = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get("category");
@@ -95,7 +110,7 @@ const ProductsPage = () => {
             <div className="relative flex-1">
               <input
                 type="text"
-                placeholder="Search crops, seeds, fertilizers..."
+                placeholder={t("products.searchPlaceholder")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
@@ -113,11 +128,11 @@ const ProductsPage = () => {
                 onChange={handleCategoryChange}
                 className="w-full py-2 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
               >
-                <option value="All">All Categories</option>
+                <option value="All">{t("categories.all")}</option>
                 {categoriesData &&
                   categoriesData.map((cat, idx) => (
                     <option key={idx} value={cat.title}>
-                      {cat.title}
+                      {categoryKeyMap[cat.title] ? t(categoryKeyMap[cat.title]) : cat.title}
                     </option>
                   ))}
               </select>
@@ -127,7 +142,7 @@ const ProductsPage = () => {
             <div className="w-full md:w-44">
               <input
                 type="number"
-                placeholder="Max Price (₹)"
+                placeholder={t("products.maxPrice")}
                 value={maxPrice}
                 onChange={(e) => {
                   setMaxPrice(e.target.value);
@@ -143,14 +158,14 @@ const ProductsPage = () => {
                 type="submit"
                 className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md text-sm font-medium transition"
               >
-                Filter
+                {t("common.filter")}
               </button>
               <button
                 type="button"
                 onClick={handleResetFilters}
                 className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm font-medium transition"
               >
-                Reset
+                {t("common.reset")}
               </button>
             </div>
           </form>
@@ -170,12 +185,12 @@ const ProductsPage = () => {
 
             {(!allProducts || allProducts.length === 0) && (
               <div className="text-center w-full py-16 bg-white rounded-lg shadow-sm border border-gray-100 mb-8">
-                <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
+                <p className="text-gray-500 text-lg">{t("products.noProductsCriteria")}</p>
                 <button
                   onClick={handleResetFilters}
                   className="mt-4 text-green-600 font-semibold hover:underline"
                 >
-                  Clear all filters
+                  {t("common.clearFilters")}
                 </button>
               </div>
             )}
@@ -195,7 +210,7 @@ const ProductsPage = () => {
                       : "bg-white text-gray-700 hover:bg-gray-50"
                   }`}
                 >
-                  Previous
+                  {t("common.prev")}
                 </button>
 
                 <div className="flex items-center gap-1">
@@ -229,7 +244,7 @@ const ProductsPage = () => {
                       : "bg-white text-gray-700 hover:bg-gray-50"
                   }`}
                 >
-                  Next
+                  {t("common.next")}
                 </button>
               </div>
             )}

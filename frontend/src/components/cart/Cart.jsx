@@ -4,11 +4,13 @@ import { IoBagHandleOutline } from "react-icons/io5";
 import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { addTocart, removeFromCart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
 
 const Cart = ({ setOpenCart }) => {
+  const { t } = useTranslation();
   const { cart } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
@@ -37,7 +39,7 @@ const Cart = ({ setOpenCart }) => {
                 onClick={() => setOpenCart(false)}
               />
             </div>
-            <h5>Cart Items is empty!</h5>
+            <h5 className="text-gray-500 text-lg">{t("cart.emptyCart")}</h5>
           </div>
         ) : (
           <>
@@ -53,7 +55,7 @@ const Cart = ({ setOpenCart }) => {
               <div className={`${styles.noramlFlex} p-4`}>
                 <IoBagHandleOutline size={25} />
                 <h5 className="pl-2 text-[20px] font-[500]">
-                  {cart && cart.length} items
+                  {t("cart.itemsCount", { count: cart ? cart.length : 0 })}
                 </h5>
               </div>
 
@@ -79,7 +81,7 @@ const Cart = ({ setOpenCart }) => {
                   className={`h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]`}
                 >
                   <h1 className="text-[#fff] text-[18px] font-[600]">
-                    Checkout Now (₹{totalPrice})
+                    {t("cart.checkoutNow", { amount: totalPrice })}
                   </h1>
                 </div>
               </Link>
@@ -92,22 +94,23 @@ const Cart = ({ setOpenCart }) => {
 };
 
 const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
+  const { t } = useTranslation();
   const [value, setValue] = useState(data.qty);
   const totalPrice = data.discountPrice * value;
 
-  const increment = (data) => {
-    if (data.stock < value) {
-      toast.error("Product stock limited!");
+  const increment = (item) => {
+    if (item.stock < value) {
+      toast.error(t("products.stockLimited"));
     } else {
       setValue(value + 1);
-      const updateCartData = { ...data, qty: value + 1 };
+      const updateCartData = { ...item, qty: value + 1 };
       quantityChangeHandler(updateCartData);
     }
   };
 
-  const decrement = (data) => {
+  const decrement = (item) => {
     setValue(value === 1 ? 1 : value - 1);
-    const updateCartData = { ...data, qty: value === 1 ? 1 : value - 1 };
+    const updateCartData = { ...item, qty: value === 1 ? 1 : value - 1 };
     quantityChangeHandler(updateCartData);
   };
 
@@ -137,10 +140,10 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
         <div className="pl-[5px]">
           <h1>{data.name}</h1>
           <h4 className="font-[400] text-[15px] text-[#00000082]">
-          ₹{data.discountPrice} * {value}
+            ₹{data.discountPrice} * {value}
           </h4>
           <h4 className="font-[600] text-[17px] pt-[3px] text-[#d02222] font-Roboto">
-          ₹{totalPrice}
+            ₹{totalPrice}
           </h4>
         </div>
         <RxCross1

@@ -10,8 +10,10 @@ import CertifiedImage from '../Assests/certified-seed.png'
 import  RegisteredImage from '../Assests/registered seed.jpg'
 import CommercialImage from '../Assests/commerial-seed.png'
 import seedsImage from "../Assests/page.jpg"
+import { useTranslation } from "react-i18next";
 
 const BeejPage = () => {
+    const { t } = useTranslation();
     const beejData = [
         {
             title: 'Nucleus Seed / नाभिक बीज',
@@ -63,7 +65,7 @@ const BeejPage = () => {
         <Header/>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-4xl font-extrabold" style ={{color :"#422006"}}>
-          SEEDS INFORMATION 
+          {t("guide.seedsHeading")} 
         </h2>
       </div>
       <div className={`flex min-h-[80vh] 800px:min-h-[35vh]  w-full  ${styles.noramlFlex}`}>

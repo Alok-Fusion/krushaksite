@@ -11,8 +11,10 @@ import { DataGrid } from "@material-ui/data-grid";
 import AdminTotalSales from "../Admin/AdminTotalSales";
 import AdminChart from "../Admin/AdminChart";
 import SellerTotalSales from "./SellerTotalSales";
+import { useTranslation } from "react-i18next";
 
 const DashboardHero = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { orders } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
@@ -28,11 +30,11 @@ const DashboardHero = () => {
   const availableBalance = (seller?.availableBalance || 0).toFixed(2);
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: t("admin.orderId"), minWidth: 150, flex: 0.7 },
 
     {
       field: "status",
-      headerName: "Status",
+      headerName: t("common.status"),
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
@@ -43,7 +45,7 @@ const DashboardHero = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: t("cart.quantity"),
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -51,7 +53,7 @@ const DashboardHero = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: t("checkout.totalPayable"),
       type: "number",
       minWidth: 130,
       flex: 0.8,
@@ -90,7 +92,7 @@ const DashboardHero = () => {
   });
   return (
     <div className="w-full p-8">
-      <h3 className="text-[22px] font-Poppins pb-2">Overview</h3>
+      <h3 className="text-[22px] font-Poppins pb-2">{t("shop.overview")}</h3>
       <div className="w-full block 800px:flex items-center justify-between">
         <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
           <div className="flex items-center">
@@ -102,12 +104,12 @@ const DashboardHero = () => {
             <h3
               className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
             >
-              Account Balance{" "}
+              {t("shop.availableBalance")}
             </h3>
           </div>
           <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">₹ {availableBalance}</h5>
           <Link to="/dashboard-withdraw-money">
-            <h5 className="pt-4 pl-[2] text-[#077f9c]">Withdraw Money</h5>
+            <h5 className="pt-4 pl-[2] text-[#077f9c]">{t("shop.withdrawMoney")}</h5>
           </Link>
         </div>
 
@@ -117,12 +119,12 @@ const DashboardHero = () => {
             <h3
               className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
             >
-              All Orders
+              {t("shop.allOrders")}
             </h3>
           </div>
           <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">{orders && orders.length}</h5>
           <Link to="/dashboard-orders">
-            <h5 className="pt-4 pl-2 text-[#077f9c]">View Orders</h5>
+            <h5 className="pt-4 pl-2 text-[#077f9c]">{t("shop.allOrders")}</h5>
           </Link>
         </div>
 
@@ -136,12 +138,12 @@ const DashboardHero = () => {
             <h3
               className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
             >
-              All Products
+              {t("shop.allProducts")}
             </h3>
           </div>
           <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">{products && products.length}</h5>
           <Link to="/dashboard-products">
-            <h5 className="pt-4 pl-2 text-[#077f9c]">View Products</h5>
+            <h5 className="pt-4 pl-2 text-[#077f9c]">{t("shop.allProducts")}</h5>
           </Link>
         </div>
       </div>
@@ -154,7 +156,7 @@ const DashboardHero = () => {
             </div>
       </div>
       <br />
-      <h3 className="text-[22px] font-Poppins pb-2">Latest Orders</h3>
+      <h3 className="text-[22px] font-Poppins pb-2">{t("shop.allOrders")}</h3>
       <div className="w-full min-h-[45vh] bg-white rounded">
       <DataGrid
         rows={row}

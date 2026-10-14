@@ -8,8 +8,10 @@ import { CiMap, CiMoneyBill, CiSettings } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { BiLocationPlus, BiMessageSquareDetail } from "react-icons/bi";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
+import { useTranslation } from "react-i18next";
 
 const DashboardSideBar = ({ active }) => {
+  const { t } = useTranslation();
   return (
     <div className="w-full h-[90vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
       {/* single item */}
@@ -24,7 +26,7 @@ const DashboardSideBar = ({ active }) => {
               active === 1 ? "text-sky-500" : "text-[#4b3621]"
             }`}
           >
-            Dashboard
+            {t("shop.dashboard")}
           </h5>
         </Link>
       </div>
@@ -40,7 +42,7 @@ const DashboardSideBar = ({ active }) => {
               active === 2 ? "text-sky-500" : "text-[#4b3621]"
             }`}
           >
-            All Orders
+            {t("shop.allOrders")}
           </h5>
         </Link>
       </div>
@@ -53,7 +55,7 @@ const DashboardSideBar = ({ active }) => {
               active === 3 ? "text-sky-500" : "text-[#4b3621]"
             }`}
           >
-            All Products
+            {t("shop.allProducts")}
           </h5>
         </Link>
       </div>
@@ -72,7 +74,7 @@ const DashboardSideBar = ({ active }) => {
               active === 4 ? "text-sky-500" : "text-[#4b3621]"
             }`}
           >
-            Create Product
+            {t("shop.createProduct")}
           </h5>
         </Link>
       </div>
@@ -91,7 +93,7 @@ const DashboardSideBar = ({ active }) => {
               active === 7 ? "text-sky-500" : "text-[#4b3621]"
             }`}
           >
-            Add Your land
+            {t("shop.addLand")}
           </h5>
         </Link>
       </div>
@@ -110,7 +112,7 @@ const DashboardSideBar = ({ active }) => {
               active === 8 ? "text-sky-500" : "text-[#4b3621]"
             }`}
           >
-           Your lands
+           {t("shop.yourLands")}
           </h5>
         </Link>
       </div>
@@ -129,7 +131,7 @@ const DashboardSideBar = ({ active }) => {
               active === 9 ? "text-sky-500" : "text-[#4b3621]"
             }`}
           >
-            Withdraw Money
+            {t("shop.withdrawMoney")}
           </h5>
         </Link>
       </div>
@@ -145,7 +147,7 @@ const DashboardSideBar = ({ active }) => {
               active === 10 ? "text-sky-500" : "text-[#4b3621]"
             }`}
           >
-            Shop Inbox
+            {t("shop.inbox")}
           </h5>
         </Link>
       </div>
@@ -161,7 +163,7 @@ const DashboardSideBar = ({ active }) => {
               active === 12 ? "text-sky-500" : "text-[#4b3621]"
             }`}
           >
-            Refunds
+            {t("shop.refunds")}
           </h5>
         </Link>
       </div>
@@ -177,7 +179,7 @@ const DashboardSideBar = ({ active }) => {
               active === 13 ? "text-sky-500" : "text-[#4b3621]"
             }`}
           >
-            Settings
+            {t("shop.settings")}
           </h5>
         </Link>
       </div>

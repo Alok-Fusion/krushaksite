@@ -9,8 +9,10 @@ import { RxCross1 } from "react-icons/rx";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const UserOrderDetails = () => {
+  const { t } = useTranslation();
   const { orders } = useSelector((state) => state.order);
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -70,16 +72,16 @@ const UserOrderDetails = () => {
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center">
           <BsFillBagFill size={30} color="crimson" />
-          <h1 className="pl-2 text-[25px]">Order Details</h1>
+          <h1 className="pl-2 text-[25px]">{t("orderDetails.title")}</h1>
         </div>
       </div>
 
       <div className="w-full flex items-center justify-between pt-6">
         <h5 className="text-[#00000084]">
-          Order ID: <span>#{data?._id?.slice(0, 8)}</span>
+          {t("orderDetails.orderId")} <span>#{data?._id?.slice(0, 8)}</span>
         </h5>
         <h5 className="text-[#00000084]">
-          Placed on: <span>{data?.createdAt?.slice(0, 10)}</span>
+          {t("orderDetails.placedOn")} <span>{data?.createdAt?.slice(0, 10)}</span>
         </h5>
       </div>
 
@@ -89,7 +91,7 @@ const UserOrderDetails = () => {
       {data &&
         data?.cart.map((item, index) => {
           return(
-          <div className="w-full flex items-start mb-5">
+          <div className="w-full flex items-start mb-5" key={index}>
             <img
               src={`${item.images[0]?.url}`}
               alt=""
@@ -105,7 +107,7 @@ const UserOrderDetails = () => {
                 className={`${styles.button} text-[#fff]`}
                 onClick={() => setOpen(true) || setSelectedItem(item)}
               >
-                Write a review
+                {t("orderDetails.giveReview")}
               </div> : (
              null
             )}
@@ -125,7 +127,7 @@ const UserOrderDetails = () => {
               />
             </div>
             <h2 className="text-[30px] font-[500] font-Poppins text-center">
-              Give a Review
+              {t("orderDetails.giveReview")}
             </h2>
             <br />
             <div className="w-full flex">
@@ -147,7 +149,7 @@ const UserOrderDetails = () => {
 
             {/* ratings */}
             <h5 className="pl-3 text-[20px] font-[500]">
-              Give a Rating <span className="text-red-500">*</span>
+              {t("products.ratingPrompt")} <span className="text-red-500">*</span>
             </h5>
             <div className="flex w-full ml-2 pt-1">
               {[1, 2, 3, 4, 5].map((i) =>
@@ -173,10 +175,7 @@ const UserOrderDetails = () => {
             <br />
             <div className="w-full ml-3">
               <label className="block text-[20px] font-[500]">
-                Write a comment
-                <span className="ml-1 font-[400] text-[16px] text-[#00000052]">
-                  (optional)
-                </span>
+                {t("products.writeReview")}
               </label>
               <textarea
                 name="comment"
@@ -185,7 +184,7 @@ const UserOrderDetails = () => {
                 rows="5"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="How was your product? write your expresion about it!"
+                placeholder={t("products.reviewComment")}
                 className="mt-2 w-[95%] border p-2 outline-none"
               ></textarea>
             </div>
@@ -193,7 +192,7 @@ const UserOrderDetails = () => {
               className={`${styles.button} text-white text-[20px] ml-3`}
               onClick={rating > 1 ? reviewHandler : null}
             >
-              Submit
+              {t("common.submit")}
             </div>
           </div>
         </div>
@@ -201,14 +200,14 @@ const UserOrderDetails = () => {
 
       <div className="border-t w-full text-right">
         <h5 className="pt-3 text-[18px]">
-          Total Price: <strong>₹{data?.totalPrice}</strong>
+          {t("orderDetails.totalPrice")} <strong>₹{data?.totalPrice}</strong>
         </h5>
       </div>
       <br />
       <br />
       <div className="w-full 800px:flex items-center">
         <div className="w-full 800px:w-[60%]">
-          <h4 className="pt-3 text-[20px] font-[600]">Shipping Address:</h4>
+          <h4 className="pt-3 text-[20px] font-[600]">{t("orderDetails.shippingAddress")}</h4>
           <h4 className="pt-3 text-[20px]">
             {data?.shippingAddress.address1 +
               " " +
@@ -219,9 +218,9 @@ const UserOrderDetails = () => {
           <h4 className=" text-[20px]">{data?.user?.phoneNumber}</h4>
         </div>
         <div className="w-full 800px:w-[40%]">
-          <h4 className="pt-3 text-[20px]">Payment Info:</h4>
+          <h4 className="pt-3 text-[20px]">{t("checkout.paymentMethod")}:</h4>
           <h4>
-            Status:{" "}
+            {t("common.status")}:{" "}
             {data?.paymentInfo?.status ? data?.paymentInfo?.status : "Not Paid"}
           </h4>
           <br />
@@ -229,14 +228,14 @@ const UserOrderDetails = () => {
             data?.status === "Delivered" && (
               <div className={`${styles.button} text-white`}
               onClick={refundHandler}
-              >Give a Refund</div>
+              >{t("orderDetails.requestRefund")}</div>
             )
            }
         </div>
       </div>
       <br />
       <Link to="/">
-        <div className={`${styles.button} text-white`}>Send Message</div>
+        <div className={`${styles.button} text-white`}>{t("products.sendMessage")}</div>
       </Link>
       <br />
       <br />
