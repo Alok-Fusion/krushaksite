@@ -1,3 +1,4 @@
+import ShopHomePage from "../pages/Shop/ShopHomePage";
 import ShopDashboardPage from "../pages/Shop/ShopDashboardPage";
 import ShopCreateProduct from "../pages/Shop/ShopCreateProduct";
 import ShopAllProducts from "../pages/Shop/ShopAllProducts";
@@ -10,17 +11,19 @@ import ShopWithDrawMoneyPage from "../pages/Shop/ShopWithDrawMoneyPage";
 import ShopInboxPage from "../pages/Shop/ShopInboxPage";
 import ShopCreateLand from "../pages/Shop/ShopCreateLand";
 import ShopAllLands from "../pages/Shop/ShopAllLands";
+
 export {
-    ShopDashboardPage,
-    ShopCreateProduct,
-    ShopAllProducts,
-    ShopPreviewPage,
-    ShopAllOrders,
-    ShopOrderDetails,
-    ShopAllRefunds,
-    ShopSettingsPage,
-    ShopWithDrawMoneyPage,
-    ShopInboxPage,
-    ShopCreateLand,
-    ShopAllLands
-}
+  ShopHomePage,
+  ShopDashboardPage,
+  ShopCreateProduct,
+  ShopAllProducts,
+  ShopPreviewPage,
+  ShopAllOrders,
+  ShopOrderDetails,
+  ShopAllRefunds,
+  ShopSettingsPage,
+  ShopWithDrawMoneyPage,
+  ShopInboxPage,
+  ShopCreateLand,
+  ShopAllLands,
+};

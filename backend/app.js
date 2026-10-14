@@ -62,33 +62,9 @@ app.get("/test", (req, res) => {
   res.status(200).json({ status: "ok", message: "Krushak API is operational" });
 });
 
-// Import controllers
-const user = require("./controller/user");
-const shop = require("./controller/shop");
-const product = require("./controller/product");
-const payment = require("./controller/payment");
-const order = require("./controller/order");
-const conversation = require("./controller/conversation");
-const message = require("./controller/message");
-const withdraw = require("./controller/withdraw");
-const lands = require("./controller/lands");
-const ai = require("./controller/ai");
-const translations = require("./controller/translations");
-
-// Route mounts
-app.use("/api/v2/user", user);
-app.use("/api/v2/conversation", conversation);
-app.use("/api/v2/message", message);
-app.use("/api/v2/order", order);
-app.use("/api/v2/shop", shop);
-app.use("/api/v2/product", product);
-app.use("/api/v2/payment", payment);
-app.use("/api/v2/withdraw", withdraw);
-app.use("/api/v2/lands", lands);
-app.use("/api/v2/ai", ai);
-app.use("/api/ai", ai); // alias for /api/ai/disease and /api/ai/chat
-app.use("/api/v2/translations", translations);
-app.use("/api/translations", translations);
+// Modularized Route Mounts
+const { registerRoutes } = require("./routes");
+registerRoutes(app);
 
 // Centralized error handling
 app.use(ErrorHandler);
