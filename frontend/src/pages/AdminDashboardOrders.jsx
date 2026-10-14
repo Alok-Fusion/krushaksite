@@ -4,8 +4,10 @@ import AdminSideBar from "../components/Admin/Layout/AdminSideBar";
 import { DataGrid } from "@material-ui/data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersOfAdmin } from "../redux/actions/order";
+import { useTranslation } from "react-i18next";
 
 const AdminDashboardOrders = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const { adminOrders, adminOrderLoading } = useSelector(
@@ -17,11 +19,11 @@ const AdminDashboardOrders = () => {
   }, []);
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: t("admin.orderId"), minWidth: 150, flex: 0.7 },
 
     {
       field: "status",
-      headerName: "Status",
+      headerName: t("common.status"),
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
@@ -32,7 +34,7 @@ const AdminDashboardOrders = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: t("admin.itemsQty"),
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -40,14 +42,14 @@ const AdminDashboardOrders = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: t("admin.total"),
       type: "number",
       minWidth: 130,
       flex: 0.8,
     },
     {
         field: "createdAt",
-        headerName: "Order Date",
+        headerName: t("orderDetails.placedOn"),
         type: "number",
         minWidth: 130,
         flex: 0.8,

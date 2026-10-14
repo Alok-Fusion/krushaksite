@@ -12,8 +12,10 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { server } from "../../../server";
 import TranslationBadge from "../../common/TranslationBadge";
+import { useTranslation } from "react-i18next";
 
 const LandsDetail = ({ data }) => {
+  const { t } = useTranslation();
   const { lands } = useSelector((state) => state.lands);
   const { user, isAuthenticated } = useSelector((state) => state.user);
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -142,7 +144,7 @@ const LandsDetail = ({ data }) => {
                         className="cursor-pointer"
                         onClick={() => removeFromWishlistHandler(data)}
                         color={click ? "red" : "#333"}
-                        title="Remove from wishlist"
+                        title={t("products.removeFromWishlist")}
                       />
                     ) : (
                       <AiOutlineHeart
@@ -150,7 +152,7 @@ const LandsDetail = ({ data }) => {
                         className="cursor-pointer"
                         onClick={() => addToWishlistHandler(data)}
                         color={click ? "red" : "#333"}
-                        title="Add to wishlist"
+                        title={t("products.addToWishlist")}
                       />
                     )}
                   </div>
@@ -170,7 +172,7 @@ const LandsDetail = ({ data }) => {
                       </h3>
                     </Link>
                     <h5 className="pb-3 text-[15px]">
-                      ({averageRating}/5)Ratings
+                      ({averageRating}/5) {t("common.ratings")}
                     </h5>
                   </div>
                   <div
@@ -178,7 +180,7 @@ const LandsDetail = ({ data }) => {
                     onClick={handleMessageSubmit}
                   >
                     <span className="text-white flex items-center">
-                      Send Message <AiOutlineMessage className="ml-1" />
+                      {t("products.sendMessage")} <AiOutlineMessage className="ml-1" />
                     </span>
                   </div>
                 </div>
@@ -203,6 +205,7 @@ const LandsDetailsInfo = ({
   totalReviewsLength,
   averageRating,
 }) => {
+  const { t } = useTranslation();
   const [active, setActive] = useState(1);
 
   return (
@@ -213,7 +216,7 @@ const LandsDetailsInfo = ({
             className="text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
             onClick={() => setActive(1)}
           >
-            Lands Details
+            {t("lands.viewLand")}
           </h5>
           {active === 1 ? (
             <div className={`${styles.active_indicator}`} />
@@ -224,7 +227,7 @@ const LandsDetailsInfo = ({
             className="text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
             onClick={() => setActive(2)}
           >
-            Seller Information
+            {t("products.sellerInfo")}
           </h5>
           {active === 2 ? (
             <div className={`${styles.active_indicator}`} />
@@ -238,11 +241,13 @@ const LandsDetailsInfo = ({
           </p>
           <div className="flex justify-between">
             <iframe
+              title="land-location-map-1"
               src="https://www.google.com/maps/d/u/0/embed?mid=12MTEYoFN62BbTsdAzLjwrjm2UkoZM8c&ehbc=2E312F&noprof=1"
               width="380"
               height="380"
             ></iframe>
             <iframe
+              title="land-location-map-2"
               src="https://www.google.com/maps/d/u/0/embed?mid=1iKDJe-GBs9Uzs4gWF6jDifUfP026-Ms&ehbc=2E312F&noprof=1"
               width="380"
               height="380"
@@ -263,7 +268,7 @@ const LandsDetailsInfo = ({
                 <div className="pl-3">
                   <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
                   <h5 className="pb-2 text-[15px]">
-                    ({averageRating}/5) Ratings
+                    ({averageRating}/5) {t("common.ratings")}
                   </h5>
                 </div>
               </div>
@@ -273,24 +278,24 @@ const LandsDetailsInfo = ({
           <div className="w-full 800px:w-[50%] mt-5 800px:mt-0 800px:flex flex-col items-end">
             <div className="text-left">
               <h5 className="font-[600]">
-                Joined on:{" "}
+                {t("products.joinedOn")}{" "}
                 <span className="font-[500]">
                   {data.shop?.createdAt?.slice(0, 10)}
                 </span>
               </h5>
               <h5 className="pt-3 font-[600]">
-                Total Lands:{" "}
+                {t("shop.sellerLands")}:{" "}
                 <span className="font-[500]">{lands && lands.length}</span>
               </h5>
               <h5 className="pt-3 font-[600]">
-                Total Reviews:{" "}
+                {t("products.totalReviews")}{" "}
                 <span className="font-[500]">{totalReviewsLength}</span>
               </h5>
               <Link to={`/shop/preview/${data.shop._id}`}>
                 <div
                   className={`${styles.button} !rounded-[4px] !h-[39.5px] mt-3`}
                 >
-                  <h4 className="text-white">Visit Seller Profile</h4>
+                  <h4 className="text-white">{t("products.visitSeller")}</h4>
                 </div>
               </Link>
             </div>

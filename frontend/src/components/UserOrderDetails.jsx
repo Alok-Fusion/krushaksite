@@ -221,7 +221,7 @@ const UserOrderDetails = () => {
           <h4 className="pt-3 text-[20px]">{t("checkout.paymentMethod")}:</h4>
           <h4>
             {t("common.status")}:{" "}
-            {data?.paymentInfo?.status ? data?.paymentInfo?.status : "Not Paid"}
+            {data?.paymentInfo?.status ? data?.paymentInfo?.status : t("checkout.notPaid")}
           </h4>
           <br />
            {

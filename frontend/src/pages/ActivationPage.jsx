@@ -1,10 +1,11 @@
 import axios from "axios";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { server } from "../server";
+import { useTranslation } from "react-i18next";
 
 const ActivationPage = () => {
+  const { t } = useTranslation();
   const { activation_token } = useParams();
   const [error, setError] = useState(false);
 
@@ -24,7 +25,7 @@ const ActivationPage = () => {
       };
       sendRequest();
     }
-  }, []);
+  }, [activation_token]);
 
   return (
     <div
@@ -37,9 +38,9 @@ const ActivationPage = () => {
       }}
     >
       {error ? (
-        <p>Your token is expired!</p>
+        <p className="text-xl text-red-500">{t("auth.tokenExpired")}</p>
       ) : (
-        <p>Your account has been created suceessfully!</p>
+        <p className="text-xl text-green-600">{t("auth.accountCreated")}</p>
       )}
     </div>
   );

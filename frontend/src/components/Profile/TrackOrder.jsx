@@ -2,8 +2,10 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getAllOrdersOfUser } from "../../redux/actions/order";
+import { useTranslation } from "react-i18next";
 
 const TrackOrder = () => {
+  const { t } = useTranslation();
   const { orders } = useSelector((state) => state.order);
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -23,29 +25,29 @@ const TrackOrder = () => {
       {" "}
       <>
         {data && data?.status === "Processing" ? (
-          <h1 className="text-[20px]">Your Order is processing in shop.</h1>
+          <h1 className="text-[20px]">{t("profile.orderStatusProcessing")}</h1>
         ) : data?.status === "Transferred to delivery partner" ? (
           <h1 className="text-[20px]">
-            Your Order is on the way for delivery partner.
+            {t("profile.orderStatusTransferred")}
           </h1>
         ) : data?.status === "Shipping" ? (
           <h1 className="text-[20px]">
-            Your Order is on the way with our delivery partner.
+            {t("profile.orderStatusShipping")}
           </h1>
         ) : data?.status === "Received" ? (
           <h1 className="text-[20px]">
-            Your Order is in your city. Our Delivery man will deliver it.
+            {t("profile.orderStatusReceived")}
           </h1>
         ) : data?.status === "On the way" ? (
           <h1 className="text-[20px]">
-            Our Delivery man is going to deliver your order.
+            {t("profile.orderStatusOnTheWay")}
           </h1>
         ) : data?.status === "Delivered" ? (
-          <h1 className="text-[20px]">Your order is delivered!</h1>
+          <h1 className="text-[20px]">{t("profile.orderStatusDelivered")}</h1>
         ) : data?.status === "Processing refund" ? (
-          <h1 className="text-[20px]">Your refund is processing!</h1>
+          <h1 className="text-[20px]">{t("profile.orderStatusRefundProcessing")}</h1>
         ) : data?.status === "Refund Success" ? (
-          <h1 className="text-[20px]">Your Refund is success!</h1>
+          <h1 className="text-[20px]">{t("profile.orderStatusRefundSuccess")}</h1>
         ) : null}
       </>
     </div>
